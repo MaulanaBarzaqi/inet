@@ -44,4 +44,8 @@ class InternetPackage extends Model
     {
         return $this->hasMany(InternetInstallation::class,'internet_package_id');
     }
+
+    public function getImageAttribute($value) {
+    return url('storage/'. $value);
+    }
 }

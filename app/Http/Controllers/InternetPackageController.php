@@ -81,13 +81,10 @@ class InternetPackageController extends Controller
         $data->save();
 
         if ($request->image != "") {
-            $image = $request->image;
-            $ext = $image->getClientOriginalExtension();
-            $imageName = time() . '.' . $ext;
+            $imageName = Str::slug($request->name) . '.' . $request->file('image')->getClientOriginalExtension();
 
-            $image->move(public_path('images/internet-package'), $imageName);
-
-            $data->image = $imageName;
+            $path = $request->file('image')->storeAs('assets/internet-package', $imageName, 'public');
+            $data->image = $path;
             $data->save();
         }
 

@@ -16,7 +16,7 @@ class InternetInstallationController extends Controller
             'data' => $internetInstallation,
         ], 200);
     }
-
+// response create dan response get all tidak sama :)
     public function create(Request $request)
     {
         $validated = $request->validate([

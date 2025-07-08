@@ -4,7 +4,6 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\InternetPackage;
-use Illuminate\Http\Request;
 
 class InternetPackageController extends Controller
 {

@@ -30,7 +30,7 @@
             <td>{{ ($items->currentPage() - 1) * $items->perPage() + $loop->iteration }}</td>
             <td>
               @if ($item->image)
-                  <img width="50" src="{{ asset('images/internet-package/' . $item->image) }}" alt="">
+                  <img width="50" src="{{ $item->image }}" alt="">
               @endif
             </td>
             <td>{{ $item->name }}</td>

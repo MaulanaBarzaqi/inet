@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InternetInstallationController;
 use App\Http\Controllers\InternetPackageController;
 use Illuminate\Support\Facades\Auth;

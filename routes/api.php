@@ -3,7 +3,6 @@
 use App\Http\Controllers\api\InternetInstallationController;
 use App\Http\Controllers\api\InternetPackageController;
 use App\Http\Controllers\api\UserController;
-use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
