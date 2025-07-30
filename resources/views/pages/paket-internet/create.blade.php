@@ -1,5 +1,6 @@
 @extends('layouts.default')
 
+@section('title', 'Tambah Paket Internet')
 @section('content')
 <div class="col-md-12">
     <div class="card mb-4">
@@ -81,8 +82,12 @@
           </div>
           {{-- image --}}
           <div class="mb-3">
-            <label for="" class="form-label">Image</label>
-            <input type="file" class="form-control" name="image" id="" />
+            <label for="" class="form-label">
+              Image <span class="text-muted">(Ukuran gambar: 512 x 512 piksel, maksimal 500KB)</span>
+            </label>
+            <input type="file" class="form-control @error('image') is-invalid @enderror" name="image" id="" />
+               <small class="text-muted">Format yang diperbolehkan: JPG, PNG. Disarankan resolusi tepat 512x512 px dan ukuran file tidak lebih dari 500KB.</small> 
+            @error('image') <div class="form-text text-danger">{{ $message }}</div>@enderror
           </div>
           <button type="submit" class="btn btn-primary">Tambah Paket</button>
         </form>

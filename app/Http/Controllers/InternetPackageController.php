@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\InternetPackageRequest;
 use App\Models\InternetPackage;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -59,7 +59,7 @@ class InternetPackageController extends Controller
         ];
 
         if($request->image != "") {
-            $rules['image'] = 'image';
+            $rules['image'] = 'image|mimes:jpg,jpeg,png|dimensions:width=512,height=512';
         }
 
         $validator = Validator::make($request->all(), $rules);
@@ -79,7 +79,7 @@ class InternetPackageController extends Controller
         $data->installation = $request->installation;
         $data->monthly_bill = $request->monthly_bill;
         $data->save();
-
+        // image
         if ($request->image != "") {
             $imageName = Str::slug($request->name) . '.' . $request->file('image')->getClientOriginalExtension();
 
@@ -128,7 +128,7 @@ class InternetPackageController extends Controller
         ];
 
         if($request->image != "") {
-            $rules['image'] = 'image';
+            $rules['image'] = 'image|mimes:jpg,jpeg,png|dimensions:width=512,height=512';
         }
         $validator = Validator::make($request->all(), $rules);
 
@@ -149,14 +149,13 @@ class InternetPackageController extends Controller
 
         if ($request->image != "") {
             // old image
-            File::delete(public_path('images/internet-package/' . $item->image));
+              if ($item->image && Storage::disk('public')->exists($item->image)) {
+            Storage::disk('public')->delete($item->image);
+        }
             // store new image
-            $image = $request->image;
-            $ext = $image->getClientOriginalExtension();
-            $imageName = time() . '.' . $ext;
-
-            $image->move(public_path('images/internet-package'), $imageName);
-            $item->image = $imageName;
+            $imageName = Str::slug($request->name) . '.' . $request->file('image')->getClientOriginalExtension();
+            $path = $request->file('image')->storeAs('assets/internet-package', $imageName, 'public');
+            $item->image = $path;
             $item->save();
         }
 
@@ -169,9 +168,14 @@ class InternetPackageController extends Controller
     public function destroy(string $id)
     {
         $item = InternetPackage::findOrFail($id);
+
+        if ($item->image && Storage::disk('public')->exists($item->image)) {
+            Storage::disk('public')->delete($item->image);
+        }
+
         $item->delete();
 
-        // InternetImage::where('internet_package_id', $id)->delete();
+        
 
         return redirect()->route('internet-package.index');
     }

@@ -1,6 +1,7 @@
 @extends('layouts.default')
 
 @section('content')
+@section('title', 'Ubah Paket Internet')
 <div class="col-md-12">
     <div class="card mb-4">
       <h5 class="card-header">Ubah Paket Internet {{ $item->name }}</h5>
@@ -22,7 +23,7 @@
           </div>
           {{-- category --}}
           <div class="mb-3">
-            <label class="form-label" for="category">Nama</label>
+            <label class="form-label" for="category">Kategori</label>
             <input 
                 type="text" 
                 id="category" 
@@ -82,11 +83,18 @@
           </div>
           {{-- image --}}
           <div class="mb-3">
-            <label for="" class="form-label">Image</label>
-            <input type="file" class="form-control" name="image" id="" />
+            <label for="" class="form-label">
+              Image <span class="text-muted">(Ukuran gambar: 512 x 512 piksel, maksimal 500KB)</span>
+            </label>
+            <input type="file" class="form-control  @error('image') is-invalid @enderror" name="image" id="" />
+             <small class="text-muted">Format diperbolehkan: JPG, PNG</small>
+             @error('image') <div class="form-text text-danger">{{ $message }}</div> @enderror
 
             @if ($item->image)
-                <img width="" src="{{ asset('images/internet-package/' . $item->image) }}" alt="">
+              <div class="mt-3">
+                <p>Gambar saat ini:</p>
+                <img width="150" src="{{ asset('storage/' . $item->image) }}" alt="preview">
+              </div>
             @endif
           </div>
           <button type="submit" class="btn btn-primary">Ubah Paket</button>

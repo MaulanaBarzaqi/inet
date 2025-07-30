@@ -1,9 +1,9 @@
 @extends('layouts.default')
 
 @section('content')
-@section('title', 'Paket Internet')
+@section('title', 'Banner')
 <div class="card">
-    <h5 class="card-header">Data Paket Internet</h5>
+    <h5 class="card-header">Data Banner</h5>
     <div class="table-responsive text-nowrap p-3">
       <div class="d-flex justify-content-start mb-4">
         <form class="d-flex" method="GET" action="">
@@ -16,13 +16,7 @@
           <tr>
             <th>#</th>
             <th>image</th>
-            <th>name</th>
-            <th>category</th>
-            <th>speed</th>
-            <th>ideal device</th>
-            <th>pemasangan</th>
-            <th>bulanan</th>
-            <th>action</th>
+            <th>judul</th>
           </tr>
         </thead>
         <tbody class="table-border-bottom-0">
@@ -31,21 +25,16 @@
             <td>{{ ($items->currentPage() - 1) * $items->perPage() + $loop->iteration }}</td>
             <td>
               @if ($item->image)
-                  {{-- <div>{{ asset('storage/' . $item->image) }}</div> --}}
-                  <img width="50" src="{{ asset('storage/' . $item->image) }}" alt="">
+                {{-- <div>{{ asset('storage/' . $item->image) }}</div> --}}
+                <img width="50" src="{{ asset('storage/' . $item->image) }}" alt="">
               @endif
             </td>
-            <td>{{ $item->name }}</td>
-            <td>{{ $item->category }}</td>
-            <td>{{ $item->speed }}</td>
-            <td>{{ $item->ideal_device }}</td>
-            <td>Rp. {{ number_format($item->installation, 0, ',', '.') }}</td>
-            <td>Rp. {{ number_format($item->monthly_bill, 0, ',', '.') }}</td>
+            <td>{{ $item->title }}</td>
             <td>
-              <a href="{{ route('internet-package.edit', $item->id) }}" class="btn btn-info btn-sm">
+              <a href="{{ route('banner.edit', $item->id) }}" class="btn btn-info btn-sm">
                 <i class="bx bx-edit"></i>
               </a>
-              <form action="{{ route('internet-package.destroy', $item->id) }}" 
+              <form action="{{ route('banner.destroy', $item->id) }}" 
                   method="post" 
                   class="d-inline">
                 @csrf

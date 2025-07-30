@@ -54,7 +54,7 @@ class InternetPackageController extends Controller
 
     function readByCategoryStudent()
     {
-        $internetPackage = InternetPackage::where('category', 'student')
+        $internetPackage = InternetPackage::where('category', 'pelajar')
             ->orderBy('name')
             ->get();
 
@@ -72,7 +72,7 @@ class InternetPackageController extends Controller
 
     function readByCategoryFamily()
     {
-        $internetPackage = InternetPackage::where('category', 'family')
+        $internetPackage = InternetPackage::where('category', 'keluarga')
             ->orderBy('name')
             ->get();
 

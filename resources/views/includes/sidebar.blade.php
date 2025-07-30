@@ -98,6 +98,25 @@
           </li>
         </ul>
       </li>
+      {{-- banner --}}
+      <li class="menu-item {{ \Route::is('banner.*') ? 'open active' : '' }}">
+        <a href="javascript:void(0);" class="menu-link menu-toggle">
+          <i class='menu-icon bx bx-book-content'></i>
+          <div data-i18n="Account Settings">Banner Data</div>
+        </a>
+        <ul class="menu-sub">
+          <li class="menu-item {{ \Route::is('banner.index') ? 'active' : '' }}">
+            <a href="{{ route('banner.index') }}" class="menu-link">
+              <div data-i18n="Account">Lihat Banner</div>
+            </a>
+          </li>
+          <li class="menu-item {{ \Route::is('banner.create') ? 'active' : '' }}">
+            <a href="{{ route('banner.create') }}" class="menu-link">
+              <div data-i18n="Notifications">Tambah Banner</div>
+            </a>
+          </li>
+        </ul>
+      </li>
       <!-- client -->
       <li class="menu-header small text-uppercase"><span class="menu-header-text">clients</span></li>
       <!-- pemasangan -->
@@ -139,8 +158,8 @@
         </ul>
       </li>
       <!-- notifications -->
-      <li class="menu-item">
-        <a href="cards-basic.html" class="menu-link">
+      <li class="menu-item {{ \Route::is('notification.*') ? 'active' : '' }}">
+        <a href="{{ route('notification.create') }}" class="menu-link">
           <i class="menu-icon tf-icons bx bx-bell-plus"></i>
           <div data-i18n="Basic">Notification</div>
         </a>

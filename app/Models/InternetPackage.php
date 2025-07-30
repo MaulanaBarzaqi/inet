@@ -24,7 +24,6 @@ class InternetPackage extends Model
         'installation',
         'monthly_bill',
     ];
-
     protected $hidden = [
         //
     ];
@@ -45,7 +44,13 @@ class InternetPackage extends Model
         return $this->hasMany(InternetInstallation::class,'internet_package_id');
     }
 
-    public function getImageAttribute($value) {
-    return url('storage/'. $value);
+    
+    public function getImageUrlAttribute() 
+    {
+        return $this->image ? url('storage/' . $this->image) : null;
     }
+    // public function getImageAttribute($value) 
+    // {
+    //     return url('storage/'. $value);    
+    // }
 }
