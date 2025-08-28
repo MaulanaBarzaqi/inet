@@ -1,7 +1,7 @@
 @extends('layouts.default')
 
 @section('content')
-@section('title', 'Banner')
+@section('title', 'Banner - Data Banner')
 <div class="card">
     <h5 class="card-header">Data Banner</h5>
     <div class="table-responsive text-nowrap p-3">

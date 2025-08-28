@@ -1,7 +1,7 @@
 @extends('layouts.default')
 
 @section('content')
-@section('title', 'Ubah Paket Internet')
+@section('title', 'Paket Internet - Ubah Paket Internet')
 <div class="col-md-12">
     <div class="card mb-4">
       <h5 class="card-header">Ubah Paket Internet {{ $item->name }}</h5>

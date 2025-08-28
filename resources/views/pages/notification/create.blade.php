@@ -1,6 +1,6 @@
 @extends('layouts.default')
 
-@section('title', 'Create Notification')
+@section('title', 'Notification - Kirim Notifikasi')
 
 @section('content')
     <div class="col-md-12">

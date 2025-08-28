@@ -1,7 +1,7 @@
 @extends('layouts.default')
 
 @section('content')
-@section('title', 'Paket Internet')
+@section('title', 'Paket Internet - Data Paket Internet')
 <div class="card">
     <h5 class="card-header">Data Paket Internet</h5>
     <div class="table-responsive text-nowrap p-3">

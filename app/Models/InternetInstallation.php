@@ -25,6 +25,12 @@ class InternetInstallation extends Model
         //
     ];
 
+    protected $casts = [
+        'id' => 'integer',
+        'user_id' => 'integer',
+        'internet_package_id' => 'integer',
+    ];
+
     public function internetPackage(): BelongsTo
     {
         return $this->belongsTo(InternetPackage::class, 'internet_package_id');

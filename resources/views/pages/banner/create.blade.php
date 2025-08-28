@@ -1,7 +1,7 @@
 @extends('layouts.default')
 
 @section('content')
-@section('title', 'Tambah Banner')
+@section('title', 'Banner - Tambah Banner')
 <div class="col-md-12">
     <div class="card mb-4">
       <h5 class="card-header">Tambah Banner</h5>

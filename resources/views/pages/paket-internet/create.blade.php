@@ -1,6 +1,6 @@
 @extends('layouts.default')
 
-@section('title', 'Tambah Paket Internet')
+@section('title', 'Paket Internet - Tambah Paket Internet')
 @section('content')
 <div class="col-md-12">
     <div class="card mb-4">

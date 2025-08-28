@@ -24,18 +24,20 @@ Route::get('/internet-installations', [InternetInstallationController::class, 'r
 
 
 Route::middleware('auth:sanctum')->group(function (){
+    // recommendation for internet packages
+    Route::get('/internet-packages/recommendation/limit', [InternetPackageController::class, 'readRecommendationLimit']);
+    // get banner list
+    Route::get('/banners/list', [BannerController::class, 'getBannerList']);
+    // search internet packages by name
+    Route::get('/internet-packages/search/{name}', [InternetPackageController::class, 'searchByName']);
+    // read internet packages by category corporate
+    Route::get('/internet-packages/category/corporate', [InternetPackageController::class, 'readByCategoryCorporate']);
+    // read internet packages by category student
+    Route::get('/internet-packages/category/student', [InternetPackageController::class, 'readByCategoryStudent']);
+    // read internet packages by category family
+    Route::get('/internet-packages/category/family', [InternetPackageController::class, 'readByCategoryFamily']);
+    // internet installation by user
+    Route::post('/internet-installations/create', [InternetInstallationController::class, 'create']);
+    // read internet installation by user
 });
-// recommendation for internet packages
-Route::get('/internet-packages/recommendation/limit', [InternetPackageController::class, 'readRecommendationLimit']);
-// get banner list
-Route::get('/banners/list', [BannerController::class, 'getBannerList']);
-// search internet packages by name
-Route::get('/internet-packages/search/{name}', [InternetPackageController::class, 'searchByName']);
-// read internet packages by category corporate
-Route::get('/internet-packages/category/corporate', [InternetPackageController::class, 'readByCategoryCorporate']);
-// read internet packages by category student
-Route::get('/internet-packages/category/student', [InternetPackageController::class, 'readByCategoryStudent']);
-// read internet packages by category family
-Route::get('/internet-packages/category/family', [InternetPackageController::class, 'readByCategoryFamily']);
-// internet installation by user
-Route::post('/internet-installations', [InternetInstallationController::class, 'create']);
+Route::get('/internet-installations/user/{id}', [InternetInstallationController::class, 'readByUser']);

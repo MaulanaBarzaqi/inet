@@ -1,7 +1,7 @@
 @extends('layouts.default')
 
 @section('content')
-@section('title', 'Pemasangan Internet')
+@section('title', 'Pemasangan - Data Pemasangan Internet')
 <div class="card">
     <h5 class="card-header">Data Pemasangan Internet</h5>
     <div class="table-responsive text-nowrap p-3">
