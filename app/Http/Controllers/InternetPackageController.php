@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\InternetPackage\StoreInternetPackageRequest;
+use App\Http\Requests\InternetPackage\UpdateInternetPackageRequest;
 use App\Models\InternetPackage;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class InternetPackageController extends Controller
@@ -22,7 +21,9 @@ class InternetPackageController extends Controller
     public function index()
     {   
 
-        $items = InternetPackage::orderBy('created_at', 'desc')->paginate(5);
+        $items = InternetPackage::orderBy('created_at', 'desc')
+            ->paginate(5)
+            ->withQueryString();
         if (request()->has('search')) {
             $search = request()->input('search');
             $items = InternetPackage::where('name', 'like', "%$search%")
@@ -47,47 +48,49 @@ class InternetPackageController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store( Request $request)
+    public function store( StoreInternetPackageRequest $request)
     {
-        $rules = [
-            'name' => 'required|max:255',
-            'category' => 'required|max:255',
-            'speed' => 'required|max:255',
-            'ideal_device' => 'required|max:255',
-            'installation' => 'required|integer',
-            'monthly_bill' => 'required|integer',
-        ];
-
-        if($request->image != "") {
-            $rules['image'] = 'image|mimes:jpg,jpeg,png|dimensions:width=512,height=512';
-        }
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return redirect()->route('internet-package.create')
-                ->withInput()
-                ->withErrors($validator);
+        // generate unique slug
+        $baseSlug = Str::slug($request->name);
+        $slug = $baseSlug;
+        $slugCounter = 1;
+        // cek jika slug sudah ada di database
+        while(InternetPackage::where('slug', $slug)->exists()) {
+            $slug = $baseSlug . '-' . $slugCounter;
+            $slugCounter++;
         }
         // insert data
         $data = new InternetPackage();
         $data->name = $request->name;
-        $data->slug = Str::slug($request->name);
+        $data->slug = $slug;
         $data->category = $request->category;
         $data->speed = $request->speed;
         $data->ideal_device = $request->ideal_device;
         $data->installation = $request->installation;
         $data->monthly_bill = $request->monthly_bill;
         $data->save();
-        // image
-        if ($request->image != "") {
-            $imageName = Str::slug($request->name) . '.' . $request->file('image')->getClientOriginalExtension();
+        // image handling with auto increment numbering
+        if($request->hasFile('image')) {
+            $extension = $request->file('image')->getClientOriginalExtension();
+            $baseName = Str::slug($request->name);
+            $imageName = $baseName . '.' . $extension;
+            $imageCounter = 1;
 
-            $path = $request->file('image')->storeAs('assets/internet-package', $imageName, 'public');
+            // cek jika file dengan nama sudah ada di storage
+            while (Storage::disk('public')->exists('assets/internet-package/' . $imageName)) {
+                $imageName = $baseName . '(' . $imageCounter . ').' . $extension;
+                $imageCounter++;
+            }
+            // simpan file dengan nama unik
+            $path = $request->file('image')->storeAs(
+                'assets/internet-package',
+                $imageName,
+                'public'
+            );
+            // update database dengan path image
             $data->image = $path;
             $data->save();
         }
-
         return redirect()->route('internet-package.index');
     }
 
@@ -114,51 +117,54 @@ class InternetPackageController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateInternetPackageRequest $request, string $id)
     {   
         $item = InternetPackage::findOrFail($id);
 
-        $rules = [
-            'name' => 'required|max:255',
-            'category' => 'required|max:255',
-            'speed' => 'required|max:255',
-            'ideal_device' => 'required|max:255',
-            'installation' => 'required|integer',
-            'monthly_bill' => 'required|integer',
-        ];
-
-        if($request->image != "") {
-            $rules['image'] = 'image|mimes:jpg,jpeg,png|dimensions:width=512,height=512';
-        }
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return redirect()->route('internet-package.edit', $item->id)
-                ->withInput()
-                ->withErrors($validator);
+        // generate unique slug(jika nama berubah)
+        if($item->name != $request->name) {
+            $baseSlug = Str::slug($request->name);
+            $slug = $baseSlug;
+            $slugCounter = 1;
+            // cek slug unique kecuali untuk record ini sendiri
+            while(InternetPackage::where('slug', $slug)->where('id', '!=', $id)->exists()) {
+                $slug = $baseSlug . '-' . $slugCounter;
+                $slugCounter++;
+            }
+            $item->slug = $slug;
         }
         // update data
         $item->name = $request->name;
-        $item->slug = Str::slug($request->name);
         $item->category = $request->category;
         $item->speed = $request->speed;
         $item->ideal_device = $request->ideal_device;
         $item->installation = $request->installation;
         $item->monthly_bill = $request->monthly_bill;
-        $item->save();
-
-        if ($request->image != "") {
-            // old image
-              if ($item->image && Storage::disk('public')->exists($item->image)) {
-            Storage::disk('public')->delete($item->image);
-        }
-            // store new image
-            $imageName = Str::slug($request->name) . '.' . $request->file('image')->getClientOriginalExtension();
-            $path = $request->file('image')->storeAs('assets/internet-package', $imageName, 'public');
+        // image handling
+        if ($request->hasFile('image')) {
+            // hapus image jika ada
+            if($item->image && Storage::disk('public')->exists($item->image)) {
+                Storage::disk('public')->delete($item->image);
+            }
+            // generate new name file with auto increment
+            $extension = $request->file('image')->getClientOriginalExtension();
+            $baseName = Str::slug($request->name);
+            $imageName = $baseName . '.' . $extension;
+            $imageCounter = 1;
+            // cek jika file dengan nama sudah ada di storage
+            while(Storage::disk('public')->exists('assets/internet-package/' . $imageName)) {
+                $imageName = $baseName . '(' . $imageCounter . ').' . $extension;
+                $imageCounter++;
+            }
+            // simpan file dengan nama unik
+            $path = $request->file('image')->storeAs(
+                'assets/internet-package',
+                $imageName,
+                'public'
+            );
             $item->image = $path;
-            $item->save();
         }
-
+        $item->save();
         return redirect()->route('internet-package.index');
     }
 
@@ -168,16 +174,16 @@ class InternetPackageController extends Controller
     public function destroy(string $id)
     {
         $item = InternetPackage::findOrFail($id);
-
-        if ($item->image && Storage::disk('public')->exists($item->image)) {
-            Storage::disk('public')->delete($item->image);
+        try {
+            if ($item->image && Storage::disk('public')->exists($item->image)) {
+                Storage::disk('public')->delete($item->image);
+            }
+            $item->delete();
+            return redirect()->route('internet-package.index');
+        } catch (\Exception $e) {
+            return redirect()->route('internet-package.index')
+                 ->with('error', 'Gagal menghapus paket: ' . $e->getMessage());
         }
-
-        $item->delete();
-
-        
-
-        return redirect()->route('internet-package.index');
     }
 
 }

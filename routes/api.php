@@ -39,5 +39,5 @@ Route::middleware('auth:sanctum')->group(function (){
     // internet installation by user
     Route::post('/internet-installations/create', [InternetInstallationController::class, 'create']);
     // read internet installation by user
+    Route::get('/internet-installations/user/{id}', [InternetInstallationController::class, 'readByUser']);
 });
-Route::get('/internet-installations/user/{id}', [InternetInstallationController::class, 'readByUser']);

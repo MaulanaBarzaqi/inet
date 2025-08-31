@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\InternetInstallation;
-use Faker\Provider\ar_EG\Internet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -104,22 +103,4 @@ class InternetInstallationController extends Controller
 
         return redirect()->route('internet-installation.index');
     }
-
-    // public function search(Request $request)
-    // {
-    //     if (!empty($request)){
-    //         $search = $request->input('search');
-
-    //         $items = InternetInstallation::where('name', 'like', "$search%")
-    //         ->paginate(5)
-    //         ->OrWhere('address', 'like', "$search%")
-    //         ->paginate(5);
-    //     }
-
-    //     $items = DB::table('internet_installations')
-    //     ->orderBy('id', 'desc')
-    //     ->paginate(5);
-
-    //     return view('pages.internet-installation.index', compact('items'));
-    // }
 }
