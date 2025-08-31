@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\InternetPackageHelper;
 use App\Http\Requests\InternetPackage\StoreInternetPackageRequest;
 use App\Http\Requests\InternetPackage\UpdateInternetPackageRequest;
 use App\Models\InternetPackage;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class InternetPackageController extends Controller
 {   
@@ -51,14 +50,7 @@ class InternetPackageController extends Controller
     public function store( StoreInternetPackageRequest $request)
     {
         // generate unique slug
-        $baseSlug = Str::slug($request->name);
-        $slug = $baseSlug;
-        $slugCounter = 1;
-        // cek jika slug sudah ada di database
-        while(InternetPackage::where('slug', $slug)->exists()) {
-            $slug = $baseSlug . '-' . $slugCounter;
-            $slugCounter++;
-        }
+        $slug = InternetPackageHelper::generateUniqueSlug($request->name);
         // insert data
         $data = new InternetPackage();
         $data->name = $request->name;
@@ -70,22 +62,10 @@ class InternetPackageController extends Controller
         $data->monthly_bill = $request->monthly_bill;
         $data->save();
         // image handling with auto increment numbering
-        if($request->hasFile('image')) {
-            $extension = $request->file('image')->getClientOriginalExtension();
-            $baseName = Str::slug($request->name);
-            $imageName = $baseName . '.' . $extension;
-            $imageCounter = 1;
-
-            // cek jika file dengan nama sudah ada di storage
-            while (Storage::disk('public')->exists('assets/internet-package/' . $imageName)) {
-                $imageName = $baseName . '(' . $imageCounter . ').' . $extension;
-                $imageCounter++;
-            }
-            // simpan file dengan nama unik
-            $path = $request->file('image')->storeAs(
-                'assets/internet-package',
-                $imageName,
-                'public'
+        if ($request->hasFile('image')) {
+            $path = InternetPackageHelper::handleImageUpload(
+                $request->file('image'),
+                $request->name
             );
             // update database dengan path image
             $data->image = $path;
@@ -122,16 +102,8 @@ class InternetPackageController extends Controller
         $item = InternetPackage::findOrFail($id);
 
         // generate unique slug(jika nama berubah)
-        if($item->name != $request->name) {
-            $baseSlug = Str::slug($request->name);
-            $slug = $baseSlug;
-            $slugCounter = 1;
-            // cek slug unique kecuali untuk record ini sendiri
-            while(InternetPackage::where('slug', $slug)->where('id', '!=', $id)->exists()) {
-                $slug = $baseSlug . '-' . $slugCounter;
-                $slugCounter++;
-            }
-            $item->slug = $slug;
+        if ($item->name != $request->name) {
+            $item->slug = InternetPackageHelper::generateUniqueSlug($request->name, $id);
         }
         // update data
         $item->name = $request->name;
@@ -141,26 +113,11 @@ class InternetPackageController extends Controller
         $item->installation = $request->installation;
         $item->monthly_bill = $request->monthly_bill;
         // image handling
-        if ($request->hasFile('image')) {
-            // hapus image jika ada
-            if($item->image && Storage::disk('public')->exists($item->image)) {
-                Storage::disk('public')->delete($item->image);
-            }
-            // generate new name file with auto increment
-            $extension = $request->file('image')->getClientOriginalExtension();
-            $baseName = Str::slug($request->name);
-            $imageName = $baseName . '.' . $extension;
-            $imageCounter = 1;
-            // cek jika file dengan nama sudah ada di storage
-            while(Storage::disk('public')->exists('assets/internet-package/' . $imageName)) {
-                $imageName = $baseName . '(' . $imageCounter . ').' . $extension;
-                $imageCounter++;
-            }
-            // simpan file dengan nama unik
-            $path = $request->file('image')->storeAs(
-                'assets/internet-package',
-                $imageName,
-                'public'
+        if($request->hasFile('image')) {
+            $path = InternetPackageHelper::handleImageUpload(
+                $request->file('image'),
+                $request->name,
+                $item->image
             );
             $item->image = $path;
         }
@@ -173,12 +130,12 @@ class InternetPackageController extends Controller
      */
     public function destroy(string $id)
     {
-        $item = InternetPackage::findOrFail($id);
         try {
-            if ($item->image && Storage::disk('public')->exists($item->image)) {
-                Storage::disk('public')->delete($item->image);
-            }
+            $item = InternetPackage::findOrFail($id);
+            // hapus image pake helper
+            InternetPackageHelper::deleteImage($item->image);
             $item->delete();
+
             return redirect()->route('internet-package.index');
         } catch (\Exception $e) {
             return redirect()->route('internet-package.index')

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\BannerHelper;
 use App\Http\Requests\Banner\StoreBannerRequest;
 use App\Http\Requests\Banner\UpdateBannerRequest;
 use App\Models\Banner;
@@ -48,37 +49,18 @@ class BannerController extends Controller
     public function store(StoreBannerRequest $request)
     {
         // generate unique slug
-        $baseSlug = Str::slug($request->title);
-        $slug = $baseSlug;
-        $slugCounter = 1;
-        // cek jika slug sudah ada di database
-        while(Banner::where('slug', $slug)->exists()) {
-            $slug = $baseSlug . '-' . $slugCounter;
-            $slugCounter++;
-        }
+        $slug = BannerHelper::generateUniqueSlug($request->title);
         // insert data
         $data = new Banner();
         $data->title = $request->title;
         $data->slug = $slug;
         $data->save();
-        // image handling with auto increment
+        // image handling
         if ($request->hasFile('image')) {
-            $extension = $request->file('image')->getClientOriginalExtension();
-            $baseName = Str::slug($request->title);
-            $imageName = $baseName . '.' . $extension;
-            $imageCounter = 1;
-            // cek jika nama file sudah ada di storage
-            while (Storage::disk('public')->exists('assets/banner/' . $imageName)) {
-                $imageName = $baseName . '(' . $imageCounter . ').' . $extension;
-                $imageCounter++;
-            }
-            // simpan dengan nama unik
-            $path = $request->file('image')->storeAs(
-                'assets/banner',
-                $imageName,
-                'public'
+            $path = BannerHelper::handleImageUpload(
+                $request->file('image'),
+                $request->title
             );
-            // update database dengan path image
             $data->image = $path;
             $data->save();
         }
@@ -115,38 +97,16 @@ class BannerController extends Controller
        
         // generate unique slug jika title berubah
         if ($item->title != $request->title) {
-            $baseSlug = Str::slug($request->title);
-            $slug = $baseSlug;
-            $slugCounter = 1;
-            // Cek slug unique kecuali untuk record ini sendiri
-            while (Banner::where('slug', $slug)->where('id', '!=', $id)->exists()) {
-                $slug = $baseSlug . '-' . $slugCounter;
-                $slugCounter++;
-            }
-            $item->slug = $slug;
+            $item->slug = BannerHelper::generateUniqueSlug($request->title, $id);
         }
         // update
         $item->title = $request->title;
+        // image handling
         if ($request->hasFile('image')) {
-            // hapus image lama jika ada
-            if ($item->image && Storage::disk('public')->exists($item->image)) {
-                Storage::disk('public')->delete($item->image);
-            }
-            // generate nama file baru dengan auto increment
-            $extension = $request->file('image')->getClientOriginalExtension();
-            $baseName = Str::slug($request->title);
-            $imageName = $baseName . '.' . $extension;
-            $imageCounter = 1;
-            // cek jika nama file sudah ada di storage
-            while (Storage::disk('public')->exists('assets/banner/' . $imageName)) {
-                $imageName = $baseName . '(' . $imageCounter . ').' . $extension;
-                $imageCounter++;
-            }
-            // simpan file dengan nama unik
-            $path = $request->file('image')->storeAs(
-                'assets/banner',
-                $imageName,
-                'public'
+            $path = BannerHelper::handleImageUpload(
+                $request->file('image'),
+                $request->title,
+                $item->image 
             );
             $item->image = $path;
         }
@@ -161,11 +121,11 @@ class BannerController extends Controller
     {
        try {
             $item = Banner::findOrFail($id);
-            if ($item->image && Storage::disk('public')->exists($item->image)) {
-                Storage::disk('public')->delete($item->image);
-            }
+            // hapus image pake helper
+            BannerHelper::deleteImage($item->image);
             $item->delete();
             return redirect()->route('banner.index');
+
        } catch (\Exception $e) {
         return redirect()->route('banner.index')
                 ->with('error', 'Gagal menghapus banner: ' . $e->getMessage());

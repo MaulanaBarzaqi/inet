@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\InternetInstallation;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class InternetInstallationController extends Controller
 {   
