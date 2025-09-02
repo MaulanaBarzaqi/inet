@@ -15,15 +15,20 @@ return new class extends Migration
             $table->id();
 
             $table->string('name');
+            $table->string('slug');
             $table->string('nik');
             $table->string('phone');
-            $table->string('address');
+            $table->text('address');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
-            $table->integer('user_id'); 
-            $table->integer('internet_package_id');
-            
+
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); 
+            $table->foreignId('internet_package_id')->constrained()->onDelete('restrict');
+
             $table->softDeletes();
             $table->timestamps();
+
+            // agar tidak ada lagi 
+            $table->unique('user_id');
         });
     }
 

@@ -1,9 +1,9 @@
 @extends('layouts.default')
 
 @section('content')
-@section('title', 'Banner - Data Banner')
+@section('title', 'Region - Data Region')
 <div class="card">
-    <h5 class="card-header">Data Banner</h5>
+    <h5 class="card-header">Data Region</h5>
     <div class="table-responsive text-nowrap p-3">
       <div class="d-flex justify-content-start mb-4">
         <form class="d-flex" method="GET" action="">
@@ -16,7 +16,9 @@
           <tr>
             <th>#</th>
             <th>image</th>
-            <th>judul</th>
+            <th>name</th>
+            <th>location</th>
+            <th>Description</th>
             <th>action</th>
           </tr>
         </thead>
@@ -28,14 +30,18 @@
               @if ($item->image)
                 {{-- <div>{{ asset('storage/' . $item->image) }}</div> --}}
                 <img width="50" src="{{ asset('storage/' . $item->image) }}" alt="">
+              @else
+                <span class="text-muted">tidak ada foto</span>
               @endif
             </td>
-            <td>{{ $item->title }}</td>
+            <td>{{ $item->name }}</td>
+            <td>{{ $item->location }}</td>
+            <td>{{ $item->description }}</td>
             <td>
-              <a href="{{ route('banner.edit', $item->id) }}" class="btn btn-info btn-sm">
+              <a href="{{ route('region.edit', $item->id) }}" class="btn btn-info btn-sm">
                 <i class="bx bx-edit"></i>
               </a>
-              <form action="{{ route('banner.destroy', $item->id) }}" 
+              <form action="{{ route('region.destroy', $item->id) }}" 
                   method="post" 
                   class="d-inline">
                 @csrf

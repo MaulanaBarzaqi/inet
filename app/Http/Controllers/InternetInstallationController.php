@@ -26,6 +26,7 @@ class InternetInstallationController extends Controller
         $items = InternetInstallation::with(['internetPackage', 'user'])->orderBy('created_at', 'desc')->paginate(5);
         if (request()->has('search')) {
             $search = request()->input('search');
+
             $items = InternetInstallation::where('name', 'like', "%$search%")
                 ->orWhere('address', 'like', "%$search%")
                 ->with(['internetPackage', 'user'])
@@ -89,6 +90,9 @@ class InternetInstallationController extends Controller
         //
     }
 
+     /**
+     * set status resource from storage.
+     */
     public function setStatus(Request $request, $id)
     {
         $request->validate([

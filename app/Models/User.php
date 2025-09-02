@@ -25,6 +25,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'region_id',
         'device_token',
     ];
 
@@ -54,6 +55,11 @@ class User extends Authenticatable
 
     public function internetInstallation(): HasOne
     {
-        return $this->hasOne(InternetInstallation::class, 'user_id', 'id');
+        return $this->hasOne(InternetInstallation::class, 'user_id');
+    }
+
+    public function region(): BelongsTo
+    {
+        return $this->belongsTo(Region::class, 'region_id');
     }
 }

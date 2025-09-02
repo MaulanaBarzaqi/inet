@@ -33,6 +33,8 @@
               @if ($item->image)
                   {{-- <div>{{ asset('storage/' . $item->image) }}</div> --}}
                   <img width="50" src="{{ asset('storage/' . $item->image) }}" alt="">
+              @else
+                  <span class="text-muted">tidak ada foto</span>
               @endif
             </td>
             <td>{{ $item->name }}</td>

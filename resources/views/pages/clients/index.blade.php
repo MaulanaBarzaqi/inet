@@ -1,9 +1,9 @@
 @extends('layouts.default')
 
 @section('content')
-@section('title', 'Banner - Data Banner')
+@section('title', 'Users - Data Users')
 <div class="card">
-    <h5 class="card-header">Data Banner</h5>
+    <h5 class="card-header">Data Users</h5>
     <div class="table-responsive text-nowrap p-3">
       <div class="d-flex justify-content-start mb-4">
         <form class="d-flex" method="GET" action="">
@@ -15,8 +15,9 @@
         <thead>
           <tr>
             <th>#</th>
-            <th>image</th>
-            <th>judul</th>
+            <th>nama</th>
+            <th>email</th>
+            <th>region</th>
             <th>action</th>
           </tr>
         </thead>
@@ -24,18 +25,24 @@
           @forelse ($items as $item)
           <tr>
             <td>{{ ($items->currentPage() - 1) * $items->perPage() + $loop->iteration }}</td>
+            <td>{{ $item->name }}</td>
+            <td>{{ $item->email }}</td>
             <td>
-              @if ($item->image)
-                {{-- <div>{{ asset('storage/' . $item->image) }}</div> --}}
-                <img width="50" src="{{ asset('storage/' . $item->image) }}" alt="">
-              @endif
+                @if(is_null($item->region_id))
+                    <span class="badge bg-label-secondary">Tidak ada region</span>
+                @elseif($item->region)
+                    <!-- Region ada -->
+                    <span class="badge bg-label-success">{{ $item->region->name }}</span>
+                @else
+                    <!-- Region dihapus atau tidak ditemukan -->
+                    <span class="badge bg-label-danger">Region dihapus (ID: {{ $item->region_id }})</span>
+                @endif
             </td>
-            <td>{{ $item->title }}</td>
             <td>
-              <a href="{{ route('banner.edit', $item->id) }}" class="btn btn-info btn-sm">
-                <i class="bx bx-edit"></i>
+              <a href="{{ route('user.show', $item->id) }}" class="btn btn-success btn-sm">
+                <i class='bx bx-show'></i>
               </a>
-              <form action="{{ route('banner.destroy', $item->id) }}" 
+              <form action="" 
                   method="post" 
                   class="d-inline">
                 @csrf

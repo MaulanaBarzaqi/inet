@@ -55,6 +55,7 @@ id="layout-navbar"
                 </div>
                 <div class="flex-grow-1">
                     <span class="fw-semibold d-block">{{ auth()->user()->name }}</span>
+                    <small class="text-muted d-block">{{ auth()->user()->role }}</small>
                     <small class="text-muted">{{ auth()->user()->email }}</small>
                 </div>
                 </div>

@@ -23,7 +23,15 @@
                                 </tr>
                                 <tr>
                                     <th>email</th>
-                                    <td>{{ $item->user->email }}</td>
+                                    <td>
+                                        @if($item->user)
+                                            {{ $item->user->email }}
+                                        @elseif($item->user_id)
+                                            <span class="badge bg-danger">Akun telah dihapus (ID: {{ $item->user_id }})</span>
+                                        @else
+                                            <span class="badge bg-secondary">Tidak ada akun terkait</span>
+                                        @endif
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>alamat</th>
@@ -48,45 +56,63 @@
                                 <tr>
                                     <th>berlangganan</th>
                                     <td>
-                                        <table class="table table-bordered">
-                                            <tr>
-                                                <th>paket internet</th>
-                                                <th>ideal device</th>
-                                                <th>pemasangan</th>
-                                                <th>bulanan</th>
-                                            </tr>
+                                        @if (is_null($item->internet_package_id))
+                                            <span class="badge bg-label-secondary">Tidak Ada Paket Internet</span>
+                                        @elseif ($item->internetPackage)
+                                            <table class="table table-bordered">
+                                                <tr>
+                                                    <th>Paket Internet</th>
+                                                    <th>Ideal Devices</th>
+                                                    <th>Biaya Pemasangan</th>
+                                                    <th>Biaya Bulanan</th>
+                                                </tr>
                                                 <tr>
                                                     <td>{{ $item->internetPackage->name }}</td>
                                                     <td>{{ $item->internetPackage->ideal_device }}</td>
                                                     <td>Rp. {{ number_format($item->internetPackage->installation, 0, ',', '.') }}</td>
                                                     <td>Rp. {{ number_format($item->internetPackage->monthly_bill, 0, ',', '.') }}</td>
                                                 </tr>
-                                        </table>
+                                            </table>
+                                        @else
+                                            <span class="badge bg-label-danger">Paket internet dihapus (ID: {{ $item->internet_package_id }})</span>
+                                        @endif
                                     </td>
                                 </tr>
-                                <tr>
-                                    <th>total pembayaran</th>
-                                    <td> Rp. {{ number_format($item->internetPackage->installation + $item->internetPackage->monthly_bill, 0, ',', '.') }}</td>
-                                </tr>
+                                @if ($item->internetPackage)
+                                    <tr>
+                                        <th>total pembayaran</th>
+                                        <td> Rp. {{ number_format($item->internetPackage->installation + $item->internetPackage->monthly_bill, 0, ',', '.') }}</td>
+                                    </tr>
+                                @endif
                             </table>
-                            <div class="d-flex mt-3 justify-content">
-                                <div class="">
-                                    <a href="{{ route('internet-installation.status', $item->id) }}?status=approved" class="btn btn-success btn-block">
-                                        <i class="fa fa-check"></i> set approved
-                                    </a>
-                                </div>
-                                
-                                <div class="mx-2">
-                                    <a href="{{ route('internet-installation.status', $item->id) }}?status=pending" class="btn btn-warning btn-block">
-                                        <i class="fa fa-spinner"></i> set pending
-                                    </a>
-                                </div>
 
-                                <div class="">
-                                    <a href="{{ route('internet-installation.status', $item->id) }}?status=rejected" class="btn btn-danger btn-block">
-                                        <i class="fa fa-times"></i> set rejected
-                                    </a>
-                                </div>
+                            <div class="d-flex mt-3 justify-content">
+                                <form action="{{ route('internet-installation.status', $item->id) }}" method="POST" class="me-2">
+                                    @csrf
+                                    @method('PUT')
+                                    <input type="hidden" name="status" value="approved">
+                                    <button type="submit" class="btn btn-success btn-block">
+                                        <i class="fa fa-check">set approved</i>
+                                    </button>
+                                </form>
+
+                                <form action="{{ route('internet-installation.status', $item->id) }}" method="POST" class="me-2">
+                                    @csrf
+                                    @method('PUT')
+                                    <input type="hidden" name="status" value="pending">
+                                    <button type="submit" class="btn btn-warning btn-block">
+                                        <i class="fa fa-check">set pending</i>
+                                    </button>
+                                </form>
+
+                                <form action="{{ route('internet-installation.status', $item->id) }}" method="POST" class="me-2">
+                                    @csrf
+                                    @method('PUT')
+                                    <input type="hidden" name="status" value="rejected">
+                                    <button type="submit" class="btn btn-danger btn-block">
+                                        <i class="fa fa-check">set rejected</i>
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>

@@ -32,7 +32,8 @@
         },
         "files": [
             "app/Helpers/BannerHelper.php",
-            "app/Helpers/InternetPackageHelper.php"
+            "app/Helpers/InternetPackageHelper.php",
+            "app/Helpers/RegionHelper.php"
         ]
     },
     "autoload-dev": {

@@ -16,7 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->enum('role', ['user', 'admin'])->default('user');            
+            $table->enum('role', ['user', 'admin'])->default('user');
+            $table->integer('region_id')->nullable()->constrained()->onDelete('set null');
             $table->string('device_token')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();

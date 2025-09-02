@@ -16,9 +16,7 @@
           <tr>
             <th>#</th>
             <th>nama</th>
-            <th>NIK</th>
             <th>WhatsApp</th>
-            <th>Email</th>
             <th>Alamat</th>
             <th>Paket Internet</th>
             <th>Status</th>
@@ -30,11 +28,19 @@
           <tr>
             <td>{{ ($items->currentPage() - 1) * $items->perPage() + $loop->iteration }}</td>
             <td>{{ $item->name }}</td>
-            <td>{{ $item->nik }}</td>
             <td>{{ $item->phone }}</td>
-            <td>{{ $item->user->email }}</td>
             <td>{{ $item->address }}</td>
-            <td>{{ $item->internetPackage->name }}</td>
+            <td>
+              @if(is_null($item->internet_package_id))
+                    <span class="badge bg-label-secondary">Tidak ada paket internet</span>
+                @elseif($item->internetPackage)
+                    <!-- paket ada -->
+                    {{ $item->internetPackage->name }}
+                @else
+                    <!-- Region dihapus atau tidak ditemukan -->
+                    <span class="badge bg-label-danger">Paket internet dihapus (ID: {{ $item->internet_package_id }})</span>
+                @endif
+            </td>
             <td>
               @if ($item->status == 'pending')
                 <span class="badge bg-label-warning">
@@ -51,9 +57,6 @@
             <td>
               <a href="{{ route('internet-installation.show', $item->id) }}" class="btn btn-success btn-sm">
                 <i class='bx bx-show'></i>
-              </a>
-              <a href="" class="btn btn-info btn-sm">
-                <i class="bx bx-edit"></i>
               </a>
               <form action="" 
                   method="post" 

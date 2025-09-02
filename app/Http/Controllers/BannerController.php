@@ -6,9 +6,6 @@ use App\Helpers\BannerHelper;
 use App\Http\Requests\Banner\StoreBannerRequest;
 use App\Http\Requests\Banner\UpdateBannerRequest;
 use App\Models\Banner;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
-use Stringable;
 
 class BannerController extends Controller
 {   

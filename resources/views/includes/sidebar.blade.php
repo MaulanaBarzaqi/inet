@@ -157,6 +157,15 @@
           </li>
         </ul>
       </li>
+      
+      <!-- users -->
+      <li class="menu-item {{ \Route::is('user.*') ? 'active' : '' }}">
+        <a href="{{ route('user.index') }}" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-user"></i>
+          <div data-i18n="Basic">Users</div>
+        </a>
+      </li>
+
       <!-- notifications -->
       <li class="menu-item {{ \Route::is('notification.*') ? 'active' : '' }}">
         <a href="{{ route('notification.create') }}" class="menu-link">
@@ -165,28 +174,27 @@
         </a>
       </li>
 
-      <!-- Forms & Tables -->
-      <li class="menu-header small text-uppercase"><span class="menu-header-text">Settings</span></li>
-      <!-- Forms -->
-      <li class="menu-item">
+      <!-- Assets -->
+      <li class="menu-header small text-uppercase"><span class="menu-header-text">Assets</span></li>
+      <!-- Region -->
+      <li class="menu-item {{ \Route::is('region.*') ? 'open active' : '' }} ">
         <a href="javascript:void(0);" class="menu-link menu-toggle">
-          <i class="menu-icon tf-icons bx bx-detail"></i>
-          <div data-i18n="Form Elements">Form Elements</div>
+          <i class="menu-icon tf-icons bx bx-map-pin"></i>
+          <div data-i18n="Form Elements">Regions</div>
         </a>
         <ul class="menu-sub">
-          <li class="menu-item">
-            <a href="forms-basic-inputs.html" class="menu-link">
-              <div data-i18n="Basic Inputs">Basic Inputs</div>
+          <li class="menu-item {{ \Route::is('region.index') ? 'active' : '' }}">
+            <a href="{{ route("region.index") }}" class="menu-link">
+              <div data-i18n="Basic Inputs">Lihat Region</div>
             </a>
           </li>
-          <li class="menu-item">
-            <a href="forms-input-groups.html" class="menu-link">
-              <div data-i18n="Input groups">Input groups</div>
+          <li class="menu-item {{ \Route::is('region.create') ? 'active' : '' }}">
+            <a href="{{ route("region.create") }}" class="menu-link">
+              <div data-i18n="Input groups">Tambah Region</div>
             </a>
           </li>
         </ul>
       </li>
-      <!-- Tables -->
       
     </ul>
   </aside>
