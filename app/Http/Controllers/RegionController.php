@@ -77,25 +77,23 @@ class RegionController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Region $region)
     {
-        $item = Region::findOrFail($id);
-
         return view('pages.region.edit')->with([
-            'item' => $item
+            'item' => $region
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRegionRequest $request, string $id)
+    public function update(UpdateRegionRequest $request, Region $region)
     {
-        $item = Region::findOrFail($id);
+        $item = $region;
        
         // generate unique slug jika name berubah
         if ($item->name != $request->name) {
-            $item->slug = RegionHelper::generateUniqueSlug($request->name, $id);
+            $item->slug = RegionHelper::generateUniqueSlug($request->name, $item->id);
         }
         // update
         $item->name = $request->name;
@@ -117,10 +115,10 @@ class RegionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Region $region)
     {
          try {
-            $item = Region::findOrFail($id);
+            $item = $region;
             // hapus image pake helper
             RegionHelper::deleteImage($item->image);
             $item->delete();

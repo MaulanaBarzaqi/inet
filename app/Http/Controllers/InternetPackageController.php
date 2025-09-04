@@ -19,7 +19,6 @@ class InternetPackageController extends Controller
     
     public function index()
     {   
-
         $items = InternetPackage::orderBy('created_at', 'desc')
             ->paginate(5)
             ->withQueryString();
@@ -85,25 +84,24 @@ class InternetPackageController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(InternetPackage $internetPackage)
     {
-        $item = InternetPackage::findOrFail($id);
 
         return view('pages.paket-internet.edit')->with([
-            'item' => $item
+            'item' => $internetPackage
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateInternetPackageRequest $request, string $id)
+    public function update(UpdateInternetPackageRequest $request, InternetPackage $internetPackage)
     {   
-        $item = InternetPackage::findOrFail($id);
+        $item = $internetPackage;
 
         // generate unique slug(jika nama berubah)
         if ($item->name != $request->name) {
-            $item->slug = InternetPackageHelper::generateUniqueSlug($request->name, $id);
+            $item->slug = InternetPackageHelper::generateUniqueSlug($request->name, $item->id);
         }
         // update data
         $item->name = $request->name;
@@ -128,10 +126,10 @@ class InternetPackageController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(InternetPackage $internetPackage)
     {
         try {
-            $item = InternetPackage::findOrFail($id);
+            $item = $internetPackage;
             // hapus image pake helper
             InternetPackageHelper::deleteImage($item->image);
             $item->delete();

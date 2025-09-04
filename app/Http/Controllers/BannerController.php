@@ -76,25 +76,23 @@ class BannerController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
-    {
-        $item = Banner::findOrFail($id);
+    public function edit(Banner $banner)
+    {   
 
         return view('pages.banner.edit')->with([
-            'item' => $item
+            'item' => $banner
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateBannerRequest $request, string $id)
+    public function update(UpdateBannerRequest $request, Banner $banner)
     {
-        $item = Banner::findOrFail($id);
-       
+        $item = $banner;
         // generate unique slug jika title berubah
         if ($item->title != $request->title) {
-            $item->slug = BannerHelper::generateUniqueSlug($request->title, $id);
+            $item->slug = BannerHelper::generateUniqueSlug($request->title, $item->id);
         }
         // update
         $item->title = $request->title;
@@ -114,10 +112,10 @@ class BannerController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Banner $banner)
     {
        try {
-            $item = Banner::findOrFail($id);
+            $item = $banner;
             // hapus image pake helper
             BannerHelper::deleteImage($item->image);
             $item->delete();

@@ -87,7 +87,7 @@
                             </table>
 
                             <div class="d-flex mt-3 justify-content">
-                                <form action="{{ route('internet-installation.status', $item->id) }}" method="POST" class="me-2">
+                                <form action="{{ route('internet-installation.status', $item->uuid) }}" method="POST" class="me-2">
                                     @csrf
                                     @method('PUT')
                                     <input type="hidden" name="status" value="approved">
@@ -96,7 +96,7 @@
                                     </button>
                                 </form>
 
-                                <form action="{{ route('internet-installation.status', $item->id) }}" method="POST" class="me-2">
+                                <form action="{{ route('internet-installation.status', $item->uuid) }}" method="POST" class="me-2">
                                     @csrf
                                     @method('PUT')
                                     <input type="hidden" name="status" value="pending">
@@ -105,7 +105,7 @@
                                     </button>
                                 </form>
 
-                                <form action="{{ route('internet-installation.status', $item->id) }}" method="POST" class="me-2">
+                                <form action="{{ route('internet-installation.status', $item->uuid) }}" method="POST" class="me-2">
                                     @csrf
                                     @method('PUT')
                                     <input type="hidden" name="status" value="rejected">

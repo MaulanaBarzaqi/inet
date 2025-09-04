@@ -38,10 +38,10 @@
             <td>{{ $item->location }}</td>
             <td>{{ $item->description }}</td>
             <td>
-              <a href="{{ route('region.edit', $item->id) }}" class="btn btn-info btn-sm">
+              <a href="{{ route('region.edit', $item->slug) }}" class="btn btn-info btn-sm">
                 <i class="bx bx-edit"></i>
               </a>
-              <form action="{{ route('region.destroy', $item->id) }}" 
+              <form action="{{ route('region.destroy', $item->slug) }}" 
                   method="post" 
                   class="d-inline">
                 @csrf

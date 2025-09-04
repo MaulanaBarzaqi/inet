@@ -34,7 +34,7 @@
                             <div class="region-section mt-2 p-3 bg-light rounded">
                                 <h6 class="mb-3">Atur Region</h6>
                                 @if (isset($regions) && $regions->count() > 0)
-                                    <form action="{{ route('user.region', $item->id) }}" method="POST">
+                                    <form action="{{ route('user.region', $item->uuid) }}" method="POST">
                                         @csrf
                                         @method('PUT')
                                         

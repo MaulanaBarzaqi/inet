@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('internet_installations', function (Blueprint $table) {
             $table->id();
 
+            $table->uuid('uuid')->nullable()->unique();
             $table->string('name');
-            $table->string('slug');
             $table->string('nik');
             $table->string('phone');
             $table->text('address');

@@ -17,22 +17,19 @@ class InternetPackageHelper
         $slug = $baseSlug;
         $counter = 1;
 
-        $query = InternetPackage::where('slug', $slug);
-        
+        // Gunakan closure untuk query dasar yang bisa digunakan berulang
+       $checkSlugExists = function ($slugToCheck) use ($excludeId) {
+        $query = InternetPackage::where('slug', $slugToCheck);
         if ($excludeId) {
             $query->where('id', '!=', $excludeId);
         }
-        
-        while ($query->exists()) {
-            $slug = $baseSlug . '-' . $counter;
-            $counter++;
-            
-            $query = InternetPackage::where('slug', $slug);
-            if ($excludeId) {
-                $query->where('id', '!=', $excludeId);
-            }
-        }
-        
+        return $query->exists();
+       };
+        // check slug awal dulu
+        while ($checkSlugExists($slug)) {
+        $slug = $baseSlug . '-' . $counter;
+        $counter++;
+    }
         return $slug;
     }
 

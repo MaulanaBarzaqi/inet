@@ -6,7 +6,7 @@
     <div class="card mb-4">
       <h5 class="card-header">Ubah Banner {{ $item->title }}</h5>
       <div class="card-body px-5">
-        <form action="{{ route('banner.update', $item->id) }}" enctype="multipart/form-data" method="post">
+        <form action="{{ route('banner.update', $item->slug) }}" enctype="multipart/form-data" method="post">
             @method('put')
             @csrf
           {{-- nama --}}

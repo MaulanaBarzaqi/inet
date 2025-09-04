@@ -57,12 +57,11 @@ class InternetInstallationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(InternetInstallation $internetInstallation)
     {
-        //
-        $item = InternetInstallation::with(['internetPackage', 'user'])->findOrFail($id);
+        
         return view('pages.internet-installation.show')->with([
-            'item' => $item
+            'item' => $internetInstallation
         ]);
     }
 
@@ -93,13 +92,13 @@ class InternetInstallationController extends Controller
      /**
      * set status resource from storage.
      */
-    public function setStatus(Request $request, $id)
+    public function setStatus(Request $request, InternetInstallation $internetInstallation)
     {
         $request->validate([
             'status' => 'required|in:pending,approved,rejected'
         ]);
 
-        $item = InternetInstallation::findOrFail($id);
+        $item = $internetInstallation;
         $item->status = $request->status;
 
         $item->save();

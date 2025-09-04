@@ -18,19 +18,20 @@ class RegionHelper
         $slug = $baseSlug;
         $counter = 1;
 
-        $query = Region::where('slug', $slug);
-        if ($excludeId) {
-            $query->where('id', '!=', $excludeId);
-        }
-        while ($query->exists()) {
-            $slug = $baseSlug . '-' . $counter;
-            $counter++;
-
-            $query = Region::where('slug', $slug);
+        // closure
+        $checkSlugExists = function ($slugToCheck) use ($excludeId) {
+            $query = Region::where('slug', $slugToCheck);
             if ($excludeId) {
                 $query->where('id', '!=', $excludeId);
             }
+            return $query->exists();
+        };
+        // check slug
+        while ($checkSlugExists($slug)) {
+            $slug = $baseSlug . '-' . $counter;
+            $counter++;
         }
+        
         return $slug;
     }
 

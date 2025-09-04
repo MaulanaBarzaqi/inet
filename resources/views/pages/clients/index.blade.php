@@ -39,7 +39,7 @@
                 @endif
             </td>
             <td>
-              <a href="{{ route('user.show', $item->id) }}" class="btn btn-success btn-sm">
+              <a href="{{ route('user.show', $item->uuid) }}" class="btn btn-success btn-sm">
                 <i class='bx bx-show'></i>
               </a>
               <form action="" 

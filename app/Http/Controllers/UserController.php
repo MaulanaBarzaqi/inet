@@ -43,13 +43,13 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(User $user)
     {
-        $item = User::with('region')->findOrFail($id);
+        // $item = User::with('region')->findOrFail($id);
         $regions = Region::all();
         
         return view('pages.clients.show')->with([
-            'item' => $item,
+            'item' => $user,
             'regions' => $regions
         ]);
     }
@@ -81,13 +81,12 @@ class UserController extends Controller
      /**
      * set region resource from storage.
      */
-    public function setRegion(Request $request, $id)
+    public function setRegion(Request $request, User $user)
     {
         $request->validate([
             'region_id' => 'required|exists:regions,id'
         ]);
-
-        $user = User::findOrfail($id);
+        
         $user->region_id = $request->region_id;
         $user->save();
 

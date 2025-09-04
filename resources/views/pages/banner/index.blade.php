@@ -32,10 +32,10 @@
             </td>
             <td>{{ $item->title }}</td>
             <td>
-              <a href="{{ route('banner.edit', $item->id) }}" class="btn btn-info btn-sm">
+              <a href="{{ route('banner.edit', $item->slug) }}" class="btn btn-info btn-sm">
                 <i class="bx bx-edit"></i>
               </a>
-              <form action="{{ route('banner.destroy', $item->id) }}" 
+              <form action="{{ route('banner.destroy', $item->slug) }}" 
                   method="post" 
                   class="d-inline">
                 @csrf

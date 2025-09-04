@@ -26,12 +26,6 @@ class InternetPackage extends Model
         //
     ];
 
-    public function setNameAttribute($value)
-    {
-        $this->attributes['name'] = $value;
-        $this->attributes['slug'] = Str::slug($value);
-    }
-
     public function internetInstallations(): HasMany
     {
         return $this->hasMany(InternetInstallation::class,'internet_package_id');

@@ -17,18 +17,18 @@ class BannerHelper
         $slug = $baseSlug;
         $counter = 1;
 
-        $query = Banner::where('slug', $slug);
-        if ($excludeId) {
-            $query->where('id', '!=', $excludeId);
-        }
-        while ($query->exists()) {
-            $slug = $baseSlug . '-' . $counter;
-            $counter++;
-
-            $query = Banner::where('slug', $slug);
-            if($excludeId) {
+        // closure
+        $checkSlugExists = function ($slugToCheck) use ($excludeId) {
+            $query = Banner::where('slug', $slugToCheck);
+            if ($excludeId) {
                 $query->where('id', '!=', $excludeId);
             }
+            return $query->exists();
+        };
+        // check slug
+        while ($checkSlugExists($slug)) {
+            $slug = $baseSlug . '-' . $counter;
+            $counter++;
         }
         return $slug;
     }

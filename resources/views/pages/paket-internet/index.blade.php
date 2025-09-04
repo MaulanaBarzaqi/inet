@@ -44,10 +44,10 @@
             <td>Rp. {{ number_format($item->installation, 0, ',', '.') }}</td>
             <td>Rp. {{ number_format($item->monthly_bill, 0, ',', '.') }}</td>
             <td>
-              <a href="{{ route('internet-package.edit', $item->id) }}" class="btn btn-info btn-sm">
+              <a href="{{ route('internet-package.edit', $item->slug) }}" class="btn btn-info btn-sm">
                 <i class="bx bx-edit"></i>
               </a>
-              <form action="{{ route('internet-package.destroy', $item->id) }}" 
+              <form action="{{ route('internet-package.destroy', $item->slug) }}" 
                   method="post" 
                   class="d-inline">
                 @csrf
