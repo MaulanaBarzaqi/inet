@@ -38,7 +38,17 @@
               @endif
             </td>
             <td>{{ $item->name }}</td>
-            <td>{{ $item->category }}</td>
+            <td>
+                @if(is_null($item->category_id))
+                    <span class="badge bg-label-secondary">Tidak ada category</span>
+                @elseif($item->category)
+                    <!-- category ada -->
+                    <span class="badge bg-label-success">{{ $item->category->name }}</span>
+                @else
+                    <!-- category dihapus atau tidak ditemukan -->
+                    <span class="badge bg-label-danger">category dihapus (ID: {{ $item->category_id }})</span>
+                @endif
+            </td>
             <td>{{ $item->speed }}</td>
             <td>{{ $item->ideal_device }}</td>
             <td>Rp. {{ number_format($item->installation, 0, ',', '.') }}</td>

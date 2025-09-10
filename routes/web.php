@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BannerController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\InternetInstallationController;
 use App\Http\Controllers\InternetPackageController;
 use App\Http\Controllers\NotificationController;
@@ -20,6 +21,14 @@ Route::middleware('admin')->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 });
 
+Route::controller(CategoryController::class)->group(function (){
+    Route::get('categories', 'index')->name('category.index');
+    Route::get('category/create', 'create')->name('category.create');
+    Route::post('category/store', 'store')->name('category.store');
+    Route::get('category/{category:slug}/edit', 'edit')->name('category.edit');
+    Route::put('category/{category:slug}', 'update')->name('category.update');
+    Route::delete('category/{category:slug}', 'destroy')->name('category.destroy');
+});
 
 Route::controller(InternetPackageController::class)->group(function (){
     Route::get('internet-packages', 'index')->name('internet-package.index');
@@ -43,6 +52,7 @@ Route::controller(RegionController::class)->group(function(){
     Route::get('regions', 'index')->name('region.index');
     Route::get('region/create', 'create')->name('region.create');
     Route::post('region/store', 'store')->name('region.store');
+    Route::get('region/{region:slug}', 'show')->name('region.show');
     Route::get('region/{region:slug}/edit', 'edit')->name('region.edit');
     Route::put('region/{region:slug}', 'update')->name('region.update');
     Route::delete('region/{region:slug}', 'destroy')->name('region.destroy');

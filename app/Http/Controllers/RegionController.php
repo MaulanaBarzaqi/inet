@@ -19,11 +19,17 @@ class RegionController extends Controller
      */
     public function index()
     {
-        $items = Region::orderBy('created_at', 'desc');
-         if (request()->has('search')) {
+        $items = Region::withCount([
+                    'users',
+                    'nonAdminUsers as non_admin_users_count'
+                ])->orderBy('created_at', 'desc');
+
+        if (request()->has('search')) {
             $search = request()->input('search');
-            $items = Region::where('name', 'like', "%$search%");
+            $items->where('name', 'like', "%$search%")
+                ->orWhere('location', 'like', "%$search%");
         }
+
         $items = $items->paginate(5)->withQueryString();
 
         return view('pages.region.index')->with([
@@ -69,9 +75,14 @@ class RegionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Region $region)
     {
-        //
+         // Load count of non-admin users
+        $region->loadCount(['nonAdminUsers as non_admin_users_count']);
+
+        return view('pages.region.show')->with([
+            'item' => $region
+    ]);
     }
 
     /**

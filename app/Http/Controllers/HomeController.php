@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Banner;
 use App\Models\InternetInstallation;
 use App\Models\InternetPackage;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -26,6 +27,7 @@ class HomeController extends Controller
      */
     public function index()
     {   
+        $admin = User::where('role', 'admin')->first();
         $internetPackages = InternetPackage::count();
         $banners = Banner::count();
         $installationCount = InternetInstallation::count();;
@@ -35,6 +37,7 @@ class HomeController extends Controller
         $rejected = InternetInstallation::where('status', 'rejected')->count();
 
         return view('home')->with([
+            'admin' => $admin,
             'internetPackages' => $internetPackages,
             'banners' => $banners,
             'installations' => $installations,

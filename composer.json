@@ -33,7 +33,8 @@
         "files": [
             "app/Helpers/BannerHelper.php",
             "app/Helpers/InternetPackageHelper.php",
-            "app/Helpers/RegionHelper.php"
+            "app/Helpers/RegionHelper.php",
+            "app/Helpers/CategoryHelper.php"
         ]
     },
     "autoload-dev": {

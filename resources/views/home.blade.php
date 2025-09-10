@@ -9,7 +9,7 @@
         <div class="d-flex align-items-end row">
             <div class="col-sm-7">
                 <div class="card-body">
-                  <h5 class="card-title text-primary">Selamat admin Maulana! 🎉</h5>
+                  <h5 class="card-title text-primary">Selamat admin {{ $admin->name ?? 'Admin' }}! 🎉</h5>
                   <p class="mb-4">
                     pelanggan internet anda saat ini <span class="fw-bold">72%</span> lebih banyak dari bulan lalu. Coba untuk meningkatkan layanan anda dengan paket internet yang lebih baik.
                   </p>

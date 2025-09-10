@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\InternetPackageHelper;
 use App\Http\Requests\InternetPackage\StoreInternetPackageRequest;
 use App\Http\Requests\InternetPackage\UpdateInternetPackageRequest;
+use App\Models\Category;
 use App\Models\InternetPackage;
 
 class InternetPackageController extends Controller
@@ -19,13 +20,18 @@ class InternetPackageController extends Controller
     
     public function index()
     {   
-        $items = InternetPackage::orderBy('created_at', 'desc')
+        $items = InternetPackage::with('category')
+            ->orderBy('created_at', 'desc')
             ->paginate(5)
             ->withQueryString();
+
         if (request()->has('search')) {
             $search = request()->input('search');
-            $items = InternetPackage::where('name', 'like', "%$search%")
-                ->orWhere('category', 'like', "%$search%")
+            $items = InternetPackage::with('category')
+                ->where('name', 'like', "%$search%")
+                ->orWhereHas('category', function($query) use ($search) {
+                    $query->where('name', 'like', "%$search%");
+                })
                 ->orderBy('created_at', 'desc')
                 ->paginate(5);
         }
@@ -40,7 +46,11 @@ class InternetPackageController extends Controller
      */
     public function create()
     {   
-        return view('pages.paket-internet.create');
+        $categories = Category::orderBy('name')->get();
+
+        return view('pages.paket-internet.create')->with([
+            'categories' => $categories
+        ]);
     }
 
     /**
@@ -54,7 +64,7 @@ class InternetPackageController extends Controller
         $data = new InternetPackage();
         $data->name = $request->name;
         $data->slug = $slug;
-        $data->category = $request->category;
+        $data->category_id = $request->category_id;
         $data->speed = $request->speed;
         $data->ideal_device = $request->ideal_device;
         $data->installation = $request->installation;
@@ -86,9 +96,11 @@ class InternetPackageController extends Controller
      */
     public function edit(InternetPackage $internetPackage)
     {
+        $categories = Category::orderBy('name')->get();
 
         return view('pages.paket-internet.edit')->with([
-            'item' => $internetPackage
+            'item' => $internetPackage,
+            'categories' => $categories
         ]);
     }
 
@@ -105,7 +117,7 @@ class InternetPackageController extends Controller
         }
         // update data
         $item->name = $request->name;
-        $item->category = $request->category;
+        $item->category_id = $request->category_id;
         $item->speed = $request->speed;
         $item->ideal_device = $request->ideal_device;
         $item->installation = $request->installation;

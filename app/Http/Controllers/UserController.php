@@ -13,10 +13,22 @@ class UserController extends Controller
      */
     public function index()
     {
-        $items = User::with('region')
-                    ->where('role', 'user')
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(5);
+        // query dasar
+        $query = User::with('region')->where('role', 'user');
+        // cek jika ada parameter search
+        if (request()->has('search') && !empty(request('search'))) {
+            $search = request()->input('search');
+            // search condition
+            $query->where(function ($q) use ($search){
+                $q->where('name', 'like', "%$search%")
+                    ->orWhere('email', 'like', "%$search%")
+                    ->orWhereHas('region', function ($qRegion) use ($search){
+                        $qRegion->where('name', 'like', "%$search%");
+                    });
+            });
+        }
+        // final query
+        $items = $query->orderBy('created_at', 'desc')->paginate(5);
 
         return view('pages.clients.index')->with([
             'items' => $items

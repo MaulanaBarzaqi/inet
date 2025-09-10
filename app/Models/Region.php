@@ -27,6 +27,12 @@ class Region extends Model
         return $this->hasMany(User::class, 'region_id');
     }
 
+    public function nonAdminUsers(): HasMany
+    {
+        // return $this->hasMany(User::class)->where('is_admin', false);
+        return $this->hasMany(User::class)->where('role', '!=', 'admin');
+    }
+
     public function getImageUrlAttribute() 
     {
         return $this->image ? url('storage/' . $this->image) : null;

@@ -98,6 +98,26 @@
           </li>
         </ul>
       </li>
+      {{-- category --}}
+      <li class="menu-item {{ \Route::is('category.*') ? 'open active' : '' }}">
+        <a href="javascript:void(0);" class="menu-link menu-toggle">
+          <i class='menu-icon tf-icons bx bx-category'></i>
+          <div data-i18n="Account Settings">Category</div>
+        </a>
+        <ul class="menu-sub">
+          <li class="menu-item {{ \Route::is('category.index') ? 'active' : '' }}">
+            <a href="{{ route('category.index') }}" class="menu-link">
+              <div data-i18n="Account">Lihat Category</div>
+            </a>
+          </li>
+          <li class="menu-item {{ \Route::is('category.create') ? 'active' : '' }}">
+            <a href="{{ route('category.create') }}" class="menu-link">
+              <div data-i18n="Notifications">Tambah Category</div>
+            </a>
+          </li>
+        </ul>
+      </li>
+
       {{-- banner --}}
       <li class="menu-item {{ \Route::is('banner.*') ? 'open active' : '' }}">
         <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -117,6 +137,7 @@
           </li>
         </ul>
       </li>
+
       <!-- client -->
       <li class="menu-header small text-uppercase"><span class="menu-header-text">clients</span></li>
       <!-- pemasangan -->

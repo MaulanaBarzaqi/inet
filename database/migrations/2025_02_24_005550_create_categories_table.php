@@ -11,18 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('internet_packages', function (Blueprint $table) {
+        Schema::create('categories', function (Blueprint $table) {
             $table->id();
 
             $table->string('name');
             $table->string('slug');
-            $table->foreignId('category_id')->constrained()->onDelete('cascade');
-            $table->string('speed');
-            $table->string('ideal_device');
-            $table->unsignedBigInteger('installation');
-            $table->unsignedBigInteger('monthly_bill');
-            $table->string('image')->nullable();
-            
+            $table->text('description')->nullable();
+
             $table->softDeletes();
             $table->timestamps();
         });
@@ -33,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('internet_packages');
+        Schema::dropIfExists('categories');
     }
 };

@@ -26,7 +26,7 @@
             <td>{{ ($items->currentPage() - 1) * $items->perPage() + $loop->iteration }}</td>
             <td>
               @if ($item->image)
-                {{-- <div>{{ asset('storage/' . $item->image) }}</div> --}}
+                <div>{{ asset('storage/' . $item->image) }}</div>
                 <img width="50" src="{{ asset('storage/' . $item->image) }}" alt="">
               @endif
             </td>

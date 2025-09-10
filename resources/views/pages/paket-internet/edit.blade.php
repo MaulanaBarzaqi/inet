@@ -22,17 +22,52 @@
             @error('name') <div class="form-text">{{ $message }}</div>@enderror
           </div>
           {{-- category --}}
-          <div class="mb-3">
-            <label class="form-label" for="category">Kategori</label>
-            <input 
-                type="text" 
-                id="category" 
-                name="category"
-                value="{{ old('category') ? old('category') : $item->category }}"
-                placeholder="nama category internet" 
-                class="form-control @error('category') is-invalid @enderror" />
-            @error('category') <div class="form-text">{{ $message }}</div>@enderror
-          </div>
+          <div class="form-group">
+                <label for="category_id">Kategori</label>
+                
+                @if(isset($categories) && $categories->count() > 0)
+                    <select name="category_id" id="category_id" class="form-control" required>
+                        <option value="">Pilih Kategori</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}" 
+                                {{ old('category_id', $item->category_id) == $category->id ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                       @if($item->category_id && !$item->category)
+                            <option value="{{ $item->category_id }}" selected style="color: red; font-style: italic;">
+                                [DIHAPUS] Category ID: {{ $item->category_id }}
+                            </option>
+                        @endif
+                    </select>
+                    @error('category_id')
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                 {{-- Warning jika category saat ini sudah dihapus --}}
+                {{-- Warning jika category saat ini sudah dihapus --}}
+                @if($item->category_id && !$item->category)
+                    <div class="alert alert-warning mt-2">
+                        <i class="bx bx-alert"></i>
+                        <strong>Peringatan:</strong> Category yang sebelumnya dipilih sudah dihapus. 
+                        Silakan pilih category yang baru atau biarkan seperti ini untuk mempertahankan ID category.
+                    </div>
+                @endif
+                @else
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Tidak ada data kategori yang tersedia. Silakan tambahkan kategori terlebih dahulu.
+                    </div>
+                {{-- Tampilkan ID category yang sudah dihapus jika ada --}}
+                 @if($item->category_id)
+                      <input type="hidden" name="category_id" value="{{ $item->category_id }}">
+                      <div class="alert alert-danger mt-2">
+                          <i class="bx bx-error"></i>
+                          <strong>Category ID {{ $item->category_id }} sudah dihapus.</strong>
+                          ID category akan dipertahankan sebagai referensi.
+                      </div>
+                  @endif
+                @endif
+            </div>
           {{-- speed --}}
           <div class="mb-3">
             <label class="form-label" for="speed">Speed</label>

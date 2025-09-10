@@ -23,7 +23,7 @@ class UpdateInternetPackageRequest extends FormRequest
     {
         $rules = [
             'name' => 'required|max:255',
-            'category' => 'required|max:255',
+            'category_id' => 'required|exists:categories,id',
             'speed' => 'required|max:255',
             'ideal_device' => 'required|max:255',
             'installation' => 'required|integer',
@@ -42,8 +42,8 @@ class UpdateInternetPackageRequest extends FormRequest
         return [
             'name.required' => 'Nama paket internet wajib diisi',
             'name.max' => 'Nama paket internet maksimal 255 karakter',
-            'category.required' => 'Kategori paket wajib diisi',
-            'category.max' => 'Kategori paket maksimal 255 karakter',
+            'category_id.required' => 'Kategori paket wajib dipilih',
+            'category_id.exists' => 'Kategori yang dipilih tidak valid',
             'speed.required' => 'Kecepatan internet wajib diisi',
             'speed.max' => 'Kecepatan internet maksimal 255 karakter',
             'ideal_device.required' => 'Device ideal wajib diisi',
@@ -62,7 +62,7 @@ class UpdateInternetPackageRequest extends FormRequest
     {
         return [
             'name' => 'nama paket',
-            'category' => 'kategori',
+            'category_id' => 'kategori',
             'speed' => 'kecepatan',
             'ideal_device' => 'device ideal',
             'installation' => 'biaya instalasi',

@@ -21,17 +21,32 @@
             @error('name') <div class="form-text">{{ $message }}</div>@enderror
           </div>
           {{-- category --}}
-          <div class="mb-3">
-            <label class="form-label" for="category">Category</label>
-            <input 
-                type="text" 
-                id="category"
-                name="category"
-                value="{{ old('category') }}"
-                placeholder="nama category internet"
-                class="form-control @error('category') is-invalid @enderror" />
-            @error('category') <div class="form-text">{{ $message }}</div>@enderror
-          </div>
+          <div class="form-group">
+                <label for="category_id">Kategori</label>
+                
+                @if(isset($categories) && $categories->count() > 0)
+                    <select name="category_id" id="category_id" class="form-control" required>
+                        <option value="">Pilih Kategori</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}" 
+                                {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('category_id')
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                @else
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Tidak ada data kategori yang tersedia. Silakan tambahkan kategori terlebih dahulu.
+                    </div>
+                    {{-- <a href="{{ route('category.create') }}" class="btn btn-primary">
+                        <i class="fas fa-plus me-1"></i> Tambah Kategori
+                    </a> --}}
+                @endif
+            </div>
           {{-- speed --}}
           <div class="mb-3">
             <label class="form-label" for="speed">Speed</label>

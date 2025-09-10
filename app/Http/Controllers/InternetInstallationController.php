@@ -15,24 +15,20 @@ class InternetInstallationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    
-
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
-        $items = InternetInstallation::with(['internetPackage', 'user'])->orderBy('created_at', 'desc')->paginate(5);
-        if (request()->has('search')) {
-            $search = request()->input('search');
+        $query = InternetInstallation::with(['internetPackage', 'user']);
 
-            $items = InternetInstallation::where('name', 'like', "%$search%")
-                ->orWhere('address', 'like', "%$search%")
-                ->with(['internetPackage', 'user'])
-                ->orderBy('created_at', 'desc')
-                ->paginate(5);
+        if (request()->has('search') && !empty(request('search'))) {
+            $search = request()->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%$search%")
+                ->orWhere('address', 'like', "%$search%");
+            });
         }
+
+        $items = $query->orderBy('created_at', 'desc')->paginate(5);
+
         return view('pages.internet-installation.index')->with([
             'items' => $items
         ]);

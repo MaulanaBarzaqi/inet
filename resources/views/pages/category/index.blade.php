@@ -1,13 +1,13 @@
 @extends('layouts.default')
 
 @section('content')
-@section('title', 'Users - Data Users')
+@section('title', 'Categories - Data Category')
 <div class="card">
-    <h5 class="card-header">Data Users</h5>
+    <h5 class="card-header">Data Category</h5>
     <div class="table-responsive text-nowrap p-3">
       <div class="d-flex justify-content-start mb-4">
         <form class="d-flex" method="GET" action="">
-          <input class="form-control me-2" name="search" value="{{ request('search') }}" type="search" placeholder="Cari nama, email, atau region..." aria-label="Search" />
+          <input class="form-control me-2" name="search" value="" type="search" placeholder="Search" aria-label="Search" />
           <button class="btn btn-outline-primary" type="submit">Search</button>
         </form>
       </div>
@@ -16,8 +16,8 @@
           <tr>
             <th>#</th>
             <th>nama</th>
-            <th>email</th>
-            <th>region</th>
+            <th>Description</th>
+            <th>jumlah paket internet</th>
             <th>action</th>
           </tr>
         </thead>
@@ -26,23 +26,23 @@
           <tr>
             <td>{{ ($items->currentPage() - 1) * $items->perPage() + $loop->iteration }}</td>
             <td>{{ $item->name }}</td>
-            <td>{{ $item->email }}</td>
             <td>
-                @if(is_null($item->region_id))
-                    <span class="badge bg-label-secondary">Tidak ada region</span>
-                @elseif($item->region)
-                    <!-- Region ada -->
-                    <span class="badge bg-label-success">{{ $item->region->name }}</span>
+                @if(strlen($item->description) > 40)
+                    {{ substr($item->description, 0, 40) }}...
                 @else
-                    <!-- Region dihapus atau tidak ditemukan -->
-                    <span class="badge bg-label-danger">Region dihapus (ID: {{ $item->region_id }})</span>
+                    {{ $item->description }}
                 @endif
             </td>
             <td>
-              <a href="{{ route('user.show', $item->uuid) }}" class="btn btn-success btn-sm">
-                <i class='bx bx-show'></i>
+                <span class="badge bg-primary">
+                    {{ $item->internet_packages_count }} paket
+                </span>
+            </td>
+            <td>
+              <a href="{{ route('category.edit', $item->slug) }}" class="btn btn-info btn-sm">
+                <i class="bx bx-edit"></i>
               </a>
-              <form action="" 
+              <form action="{{ route('category.destroy', $item->slug) }}" 
                   method="post" 
                   class="d-inline">
                 @csrf

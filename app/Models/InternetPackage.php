@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
@@ -16,7 +17,7 @@ class InternetPackage extends Model
     protected $fillable = [
         'name',
         'slug',
-        'category',
+        'category_id',
         'speed',
         'ideal_device',
         'installation',
@@ -25,6 +26,11 @@ class InternetPackage extends Model
     protected $hidden = [
         //
     ];
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
+    }
 
     public function internetInstallations(): HasMany
     {

@@ -18,6 +18,7 @@
             <th>image</th>
             <th>name</th>
             <th>location</th>
+            <th>Jumlah User</th>
             <th>Description</th>
             <th>action</th>
           </tr>
@@ -36,8 +37,22 @@
             </td>
             <td>{{ $item->name }}</td>
             <td>{{ $item->location }}</td>
-            <td>{{ $item->description }}</td>
             <td>
+               <span class="badge bg-primary">
+                  {{ $item->non_admin_users_count }} user
+               </span>
+            </td>
+            <td>
+                @if(strlen($item->description) > 30)
+                    {{ substr($item->description, 0, 30) }}...
+                @else
+                    {{ $item->description }}
+                @endif
+            </td>
+            <td>
+              <a href="{{ route('region.show', $item->slug) }}" class="btn btn-success btn-sm">
+                <i class='bx bx-show'></i>
+              </a>
               <a href="{{ route('region.edit', $item->slug) }}" class="btn btn-info btn-sm">
                 <i class="bx bx-edit"></i>
               </a>
