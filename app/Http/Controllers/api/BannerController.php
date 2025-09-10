@@ -15,7 +15,8 @@ class BannerController extends Controller
             'data' => $banner,
         ], 200);
     }
-     function getBannerList()
+    
+     function readAllBanners()
     {
         $banner = Banner::orderBy('created_at', 'asc')
             ->limit(5)

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\api\BannerController;
+use App\Http\Controllers\api\CategoryController;
 use App\Http\Controllers\api\InternetInstallationController;
 use App\Http\Controllers\api\InternetPackageController;
 use App\Http\Controllers\api\UserController;
@@ -20,22 +21,21 @@ Route::get('/users', [UserController::class, 'readAll']);
 Route::get('/internet-packages', [InternetPackageController::class, 'readAll']);
 Route::get('/banners', [BannerController::class, 'readAll']);
 Route::get('/internet-installations', [InternetInstallationController::class, 'readAll']);
+Route::get('/categories', [CategoryController::class, 'readAll']);
 
 
 
 Route::middleware('auth:sanctum')->group(function (){
-    // recommendation for internet packages
-    Route::get('/internet-packages/recommendation/limit', [InternetPackageController::class, 'readRecommendationLimit']);
-    // get banner list
-    Route::get('/banners/list', [BannerController::class, 'getBannerList']);
+    // read all banners
+    Route::get('/banners/list', [BannerController::class, 'readAllBanners']);
+    // read all categories
+    Route::get('/categories/list', [CategoryController::class, 'readAllCategories']);
+    // read all internet packages
+    Route::get('/internet-packages/list', [InternetPackageController::class, 'readAllInternetPackages']);
+    // read internet packages by category
+    Route::get('/internet-packages/category/{slug}', [InternetPackageController::class, 'readByCategory']);
     // search internet packages by name
     Route::get('/internet-packages/search/{name}', [InternetPackageController::class, 'searchByName']);
-    // read internet packages by category corporate
-    Route::get('/internet-packages/category/corporate', [InternetPackageController::class, 'readByCategoryCorporate']);
-    // read internet packages by category student
-    Route::get('/internet-packages/category/student', [InternetPackageController::class, 'readByCategoryStudent']);
-    // read internet packages by category family
-    Route::get('/internet-packages/category/family', [InternetPackageController::class, 'readByCategoryFamily']);
     // internet installation by user
     Route::post('/internet-installations/create', [InternetInstallationController::class, 'create']);
     // read internet installation by user

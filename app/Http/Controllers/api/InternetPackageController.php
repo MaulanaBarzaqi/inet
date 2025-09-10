@@ -9,37 +9,18 @@ class InternetPackageController extends Controller
 {
     function readAll()
     {
-        $internetPackage = InternetPackage::all();
+        $internetPackage = InternetPackage::with('category')->get();
 
         return response()->json([
             'data' => $internetPackage,
         ], 200);
     }
 
-    function readRecommendationLimit()
+    function readAllInternetPackages()
     {
-        $internetPackage = InternetPackage::orderBy('monthly_bill', 'asc')
-            ->limit(5)
-            ->get();
-
-            if(count($internetPackage) > 0) {
-                return response()->json([
-                    'data' => $internetPackage,
-                ], 200);
-            } else {
-                return response()->json([
-                    'message' => 'not found',
-                    'data' => $internetPackage,
-                ], 404);
-            }
-    }
-
-    function readByCategoryCorporate()
-    {
-        $internetPackage = InternetPackage::where('category', 'corporate')
-            ->orderBy('name')
-            ->get();
-
+        $internetPackage = InternetPackage::with('category')
+                            ->orderBy('monthly_bill', 'asc')
+                            ->get();
         if (count($internetPackage) > 0) {
             return response()->json([
                 'data' => $internetPackage,
@@ -47,35 +28,19 @@ class InternetPackageController extends Controller
         } else {
             return response()->json([
                 'message' => 'not found',
-                'data' => $internetPackage,
+                'data' => $internetPackage
             ], 404);
         }
     }
 
-    function readByCategoryStudent()
+    function readByCategory($categorySlug)
     {
-        $internetPackage = InternetPackage::where('category', 'pelajar')
+        $internetPackage = InternetPackage::with('category')
+            ->whereHas('category', function($query) use ($categorySlug) {
+                $query->where('slug', $categorySlug);
+            })
             ->orderBy('name')
             ->get();
-
-        if (count($internetPackage) > 0) {
-            return response()->json([
-                'data' => $internetPackage,
-            ], 200);
-        } else {
-            return response()->json([
-                'message' => 'not found',
-                'data' => $internetPackage,
-            ], 404);
-        }
-    }
-
-    function readByCategoryFamily()
-    {
-        $internetPackage = InternetPackage::where('category', 'keluarga')
-            ->orderBy('name')
-            ->get();
-
         if (count($internetPackage) > 0) {
             return response()->json([
                 'data' => $internetPackage,
@@ -90,21 +55,21 @@ class InternetPackageController extends Controller
 
     function searchByName($name)
     {
-        $internetPackage = InternetPackage::query()
-            ->where('name', 'like', "%{$name}%")
-            ->orderBy('name')
-            ->get();
-        
+        $internetPackage = InternetPackage::with('category')
+                           ->where('name', 'like', "%{$name}%")
+                           ->orederBy('name')
+                           ->get();
         if (count($internetPackage) > 0) {
             return response()->json([
                 'data' => $internetPackage,
             ], 200);
-        }else {
+        } else {
             return response()->json([
                 'message' => 'not found ' . $name,
-                'data' => $internetPackage, 
+                'data' => $internetPackage
             ], 404);
         }
     }
+    
 
 }
