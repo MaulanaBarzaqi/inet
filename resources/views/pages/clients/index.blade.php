@@ -18,6 +18,7 @@
             <th>nama</th>
             <th>email</th>
             <th>region</th>
+            <th>status pemasangan</th>
             <th>action</th>
           </tr>
         </thead>
@@ -38,6 +39,21 @@
                     <span class="badge bg-label-danger">Region dihapus (ID: {{ $item->region_id }})</span>
                 @endif
             </td>
+           
+               <td>
+                @if($item->internetInstallation)
+                    <!-- Sudah mendaftar pemasangan -->
+                    <span class="badge bg-label-{{ 
+                        $item->internetInstallation->status == 'approved' ? 'success' : 
+                        ($item->internetInstallation->status == 'pending' ? 'warning' : 'danger') 
+                    }}">
+                        {{ strtoupper($item->internetInstallation->status) }}
+                    </span>
+                @else
+                    <span class="badge bg-label-secondary">BELUM MENDAFTAR</span>
+                @endif
+            </td>
+          
             <td>
               <a href="{{ route('user.show', $item->uuid) }}" class="btn btn-success btn-sm">
                 <i class='bx bx-show'></i>

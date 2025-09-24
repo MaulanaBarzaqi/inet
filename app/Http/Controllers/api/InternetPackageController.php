@@ -41,15 +41,16 @@ class InternetPackageController extends Controller
             })
             ->orderBy('name')
             ->get();
-        if (count($internetPackage) > 0) {
-            return response()->json([
-                'data' => $internetPackage,
-            ], 200);
-        } else {
-            return response()->json([
-                'message' => 'not found',
-                'data' => $internetPackage,
-            ], 404);
+            
+             if (count($internetPackage) > 0) {
+                return response()->json([
+                    'data' => $internetPackage,
+                ], 200);
+            }else {
+                return response()->json([
+                    'message' => 'not found',
+                    'data' => $internetPackage,
+                ], 404);
         }
     }
 
@@ -57,18 +58,22 @@ class InternetPackageController extends Controller
     {
         $internetPackage = InternetPackage::with('category')
                            ->where('name', 'like', "%{$name}%")
-                           ->orederBy('name')
+                           ->orderBy('name')
                            ->get();
-        if (count($internetPackage) > 0) {
-            return response()->json([
-                'data' => $internetPackage,
-            ], 200);
-        } else {
-            return response()->json([
-                'message' => 'not found ' . $name,
-                'data' => $internetPackage
-            ], 404);
-        }
+        // if (count($internetPackage) > 0) {
+        //     return response()->json([
+        //         'data' => $internetPackage,
+        //     ], 200);
+        // } else {
+        //     return response()->json([
+        //         'message' => 'not found ' . $name,
+        //         'data' => $internetPackage
+        //     ], 404);
+        // }
+        return response()->json([
+                    'data' => $internetPackage, // Ini akan [] jika kosong
+                    'message' => count($internetPackage) > 0 ? 'Data found' : 'No result on' . $name
+                ], 200);
     }
     
 

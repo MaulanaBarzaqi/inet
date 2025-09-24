@@ -28,7 +28,8 @@ class User extends Authenticatable
         'password',
         'role',
         'region_id',
-        'device_token',
+        'fcm_token',
+        'internet_installation_id'
     ];
 
     /**
@@ -74,4 +75,43 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Region::class, 'region_id');
     }
+
+     /**
+     * Specifies the user's FCM tokens
+     *
+     * @return string|array
+     */
+    public function routeNotificationForFcm()
+    {
+        if ($this->role === 'admin') {
+            return null;
+        }
+
+        return $this->fcm_token ? [$this->fcm_token] : null;
+    }
+
+     /**
+     * Scope untuk mendapatkan user berdasarkan role
+     */
+    public function scopeByRole($query, $role)
+    {
+        return $query->where('role', $role);
+    }
+
+    /**
+     * Scope untuk mendapatkan user berdasarkan region
+     */
+    public function scopeByRegion($query, $regionId)
+    {
+        return $query->where('region_id', $regionId);
+    }
+
+     /**
+     * Scope untuk mendapatkan user yang memiliki FCM token
+     */
+    public function scopeWithFcmToken($query)
+    {
+        return $query->whereNotNull('fcm_token')->where('fcm_token', '!=', '');
+    }
+
 }

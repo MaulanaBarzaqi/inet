@@ -22,15 +22,19 @@ class BannerController extends Controller
             ->limit(5)
             ->get();
 
-            if(count($banner) > 0) {
-                return response()->json([
-                    'data' => $banner,
+        //      if (count($banner) > 0) {
+        //         return response()->json([
+        //             'data' => $banner,
+        //         ], 200);
+        //     }else {
+        //         return response()->json([
+        //             'message' => 'not found',
+        //             'data' => $banner,
+        //         ], 404);
+        // }
+            return response()->json([
+                    'data' => $banner, // Ini akan [] jika kosong
+                    'message' => count($banner) > 0 ? 'Data found' : 'No banners'
                 ], 200);
-            } else {
-                return response()->json([
-                    'message' => 'not found',
-                    'data' => $banner,
-                ], 404);
-            }
     }
 }

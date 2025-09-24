@@ -14,7 +14,9 @@ class UserController extends Controller
     public function index()
     {
         // query dasar
-        $query = User::with('region')->where('role', 'user');
+        $query = User::with('region', 'internetInstallation')
+                       ->where('role', 'user');
+
         // cek jika ada parameter search
         if (request()->has('search') && !empty(request('search'))) {
             $search = request()->input('search');

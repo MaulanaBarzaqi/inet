@@ -19,7 +19,8 @@ return new class extends Migration
             $table->string('password');
             $table->enum('role', ['user', 'admin'])->default('user');
             $table->integer('region_id')->nullable()->constrained()->onDelete('set null');
-            $table->string('device_token')->nullable();
+            $table->unsignedBigInteger('internet_installation_id')->nullable();
+            $table->string('fcm_token')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();

@@ -71,7 +71,8 @@ Route::controller(UserController::class)->group(function(){
     Route::put('user/{user:uuid}/set-region', 'setRegion')->name('user.region');
 });
 
-Route::get('notification/create', [NotificationController::class, 'create'])->name('notification.create');
+Route::get('notifications/create', [NotificationController::class, 'create'])->name('notifications.create');
+Route::post('notifications/send', [NotificationController::class, 'sendNotification'])->name('notifications.send');
 
 Route::get('logout', function () {
     Auth::logout();

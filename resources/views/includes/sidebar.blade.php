@@ -189,7 +189,7 @@
 
       <!-- notifications -->
       <li class="menu-item {{ \Route::is('notification.*') ? 'active' : '' }}">
-        <a href="{{ route('notification.create') }}" class="menu-link">
+        <a href="{{ route('notifications.create') }}" class="menu-link">
           <i class="menu-icon tf-icons bx bx-bell-plus"></i>
           <div data-i18n="Basic">Notification</div>
         </a>

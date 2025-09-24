@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\api\BannerController;
 use App\Http\Controllers\api\CategoryController;
+use App\Http\Controllers\api\FcmTokenController;
 use App\Http\Controllers\api\InternetInstallationController;
 use App\Http\Controllers\api\InternetPackageController;
 use App\Http\Controllers\api\UserController;
@@ -40,4 +41,16 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::post('/internet-installations/create', [InternetInstallationController::class, 'create']);
     // read internet installation by user
     Route::get('/internet-installations/user/{id}', [InternetInstallationController::class, 'readByUser']);
+    // fcm token on user table
+    Route::post('/update-fcm-token', [UserController::class, 'updateFcmToken']);
+    Route::post('/remove-fcm-token', [UserController::class, 'removeFcmToken']);
+
+   
 });
+
+Route::prefix('notifications')->group(function () {
+    Route::post('/send-to-all', [FcmTokenController::class, 'sendToAll']);
+    Route::post('/send-to-user/{userId}', [FcmTokenController::class, 'sendToUser']);
+    Route::post('/send-to-region/{regionId}', [FcmTokenController::class, 'sendToRegion']);
+});
+

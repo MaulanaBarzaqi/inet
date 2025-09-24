@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -56,5 +57,53 @@ class UserController extends Controller
             'data' => $user,
             'token' => $token,
         ], 201);
+    }
+
+    public function updateFcmToken(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'fcm_token' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'unauthorized',
+            ], 401);
+        }
+           User::where('id', $user->id)->update([
+            'fcm_token' => $request->fcm_token
+        ]);
+
+        return response()->json([
+            'message' => 'FCM token updated successfully',
+        ], 201);
+    }
+
+    public function removeFcmToken(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'unathorized',
+            ], 401);
+        }
+        // Set fcm_token menjadi null
+        User::where('id', $user->id)->update([
+            'fcm_token' => null
+        ]);
+
+          return response()->json([
+            'message' => 'FCM token removed successfully',
+        ], 200);
     }
 }

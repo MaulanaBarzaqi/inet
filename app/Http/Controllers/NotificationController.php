@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 
 class NotificationController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+{   
+    protected $notificationService;
+
+    public function __construct(NotificationService $notificationService)
     {
-        //
+        $this->notificationService = $notificationService;
     }
 
     /**
@@ -22,43 +22,55 @@ class NotificationController extends Controller
         return view('pages.notification.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function sendNotification(Request $request)
     {
-        //
-    }
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'body' => 'required|string',
+            'target_type' => 'required|in:all,user,region',
+            'user_id' => 'required_if:target_type,user|exists:users,id',
+            'region_id' => 'required_if:target_type,region|exists:regions,id',
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+        try {
+            $count = 0;
+            $message = '';
+            switch ($request->target_type) {
+                case 'all':
+                    $count = $this->notificationService->sendToAllUsers(
+                        $request->title,
+                        $request->body
+                    );
+                     $message = "Notifikasi berhasil dikirim ke {$count} pengguna";
+                    break;
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+                case 'user':
+                    $success = $this->notificationService->sendToUser(
+                        $request->user_id,
+                        $request->title,
+                        $request->body
+                    );
+                    $count = $success ? 1:0;
+                     $message = $success 
+                        ? "Notifikasi berhasil dikirim ke pengguna" 
+                        : "Gagal mengirim notifikasi ke pengguna";
+                    break;
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+                case 'region':
+                    $count = $this->notificationService->sendToRegion(
+                        $request->region_id,
+                        $request->title,
+                        $request->body
+                    );
+                    $message = "Notifikasi berhasil dikirim ke {$count} pengguna di daerah tersebut";
+                    break;
+            }
+             return redirect()->back()->with('success', $message);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        } catch (\Exception $e) {
+             return redirect()->back()
+                ->withInput()
+                ->with('error', 'Gagal mengirim notifikasi: ' . $e->getMessage());
+        }
     }
 }
