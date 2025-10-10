@@ -72,7 +72,7 @@ Route::controller(UserController::class)->group(function(){
 });
 
 Route::get('notifications/create', [NotificationController::class, 'create'])->name('notifications.create');
-Route::post('notifications/send', [NotificationController::class, 'sendNotification'])->name('notifications.send');
+Route::post('notifications/send', [NotificationController::class, 'send'])->name('notifications.send');
 
 Route::get('logout', function () {
     Auth::logout();

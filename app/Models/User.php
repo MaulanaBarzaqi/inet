@@ -81,13 +81,9 @@ class User extends Authenticatable
      *
      * @return string|array
      */
-    public function routeNotificationForFcm()
+    public function routeNotificationForFcm(): string|array|null
     {
-        if ($this->role === 'admin') {
-            return null;
-        }
-
-        return $this->fcm_token ? [$this->fcm_token] : null;
+        return $this->fcm_token;
     }
 
      /**
@@ -109,7 +105,7 @@ class User extends Authenticatable
      /**
      * Scope untuk mendapatkan user yang memiliki FCM token
      */
-    public function scopeWithFcmToken($query)
+    public function scopeWithValidFcmToken($query)
     {
         return $query->whereNotNull('fcm_token')->where('fcm_token', '!=', '');
     }

@@ -100,7 +100,7 @@
                   <label for="region_id" class="form-label">Pilih Daerah</label>
                   <select class="form-select" id="region_id" name="region_id">
                     <option value="">pilih daerah</option>
-                    @foreach (\App\Models\Region::get() as $region)
+                    @foreach ($regions as $region)
                       <option value="{{ $region->id }}" {{ old('region_id') == $region->id ? 'selected' : '' }}>
                         {{ $region->name }} - {{ $region->location }}
                       </option>
@@ -114,7 +114,7 @@
                   <label for="user_id" class="form-label">Untuk Pelanggan</label>
                   <select class="form-select" name="user_id" id="user_id">
                     <option value="">Pilih pelanggan</option>
-                    @foreach (\App\Models\User::where('role', 'user')->get() as $user)
+                    @foreach ($users as $user)
                     <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
                       {{ $user->name }} - {{ $user->email }}
                     </option>

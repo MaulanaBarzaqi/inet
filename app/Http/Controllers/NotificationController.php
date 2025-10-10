@@ -2,75 +2,81 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\NotificationService;
+use App\Models\User;
+use App\Models\Region;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\PushNotification;
 
 class NotificationController extends Controller
 {   
-    protected $notificationService;
-
-    public function __construct(NotificationService $notificationService)
-    {
-        $this->notificationService = $notificationService;
-    }
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
-    {
-        return view('pages.notification.create');
+    {   
+          $regions = \App\Models\Region::all();
+          $users = \App\Models\User::where('role', 'user')->get();
+
+        return view('pages.notification.create', compact('regions', 'users'));
     }
 
-    public function sendNotification(Request $request)
+     /**
+     * Menangani logika pengiriman notifikasi dari form admin.
+     */
+    public function send(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'body' => 'required|string',
             'target_type' => 'required|in:all,user,region',
-            'user_id' => 'required_if:target_type,user|exists:users,id',
-            'region_id' => 'required_if:target_type,region|exists:regions,id',
+            'user_id' => 'required_if:target_type,user|nullable|exists:users,id',
+            'region_id' => 'required_if:target_type,region|nullable|exists:regions,id',
         ]);
 
+         if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $title = $request->title;
+        $body = $request->body;
+        $targetType = $request->target_type;
+        $notifiableUsers = collect();
+        $message = '';
         try {
-            $count = 0;
-            $message = '';
-            switch ($request->target_type) {
-                case 'all':
-                    $count = $this->notificationService->sendToAllUsers(
-                        $request->title,
-                        $request->body
-                    );
-                     $message = "Notifikasi berhasil dikirim ke {$count} pengguna";
-                    break;
-
-                case 'user':
-                    $success = $this->notificationService->sendToUser(
-                        $request->user_id,
-                        $request->title,
-                        $request->body
-                    );
-                    $count = $success ? 1:0;
-                     $message = $success 
-                        ? "Notifikasi berhasil dikirim ke pengguna" 
-                        : "Gagal mengirim notifikasi ke pengguna";
-                    break;
-
-                case 'region':
-                    $count = $this->notificationService->sendToRegion(
-                        $request->region_id,
-                        $request->title,
-                        $request->body
-                    );
-                    $message = "Notifikasi berhasil dikirim ke {$count} pengguna di daerah tersebut";
-                    break;
+            if ($targetType === 'all'){
+                $notifiableUsers = User::byRole('user')
+                    ->withValidFcmToken()
+                    ->get();
+                    $message = "semua pelanggan";
             }
-             return redirect()->back()->with('success', $message);
+            elseif ($targetType === 'user' && $request->user_id) {
+                  $user = User::withValidFcmToken()
+                    ->find($request->user_id);
+                if ($user) {
+                    $notifiableUsers = collect([$user]);
+                    $message = "Pelanggan: {$user->name}";
+                } else {
+                    return redirect()->back()->with('error', 'Pelanggan tidak ditemukan atau tidak memiliki token FCM.');
+                }
+            }
+            elseif ($targetType === 'region' && $request->region_id) {
+                  $regionId = $request->region_id;
+                  $notifiableUsers = User::byRole('user')
+                      ->byRegion($regionId)
+                      ->withValidFcmToken()
+                      ->get();
+                  $regionName = Region::find($regionId)?->name ?? 'Daerah tidak dikenal';
+                  $message = "Pelanggan di Daerah: {$regionName}";
+            }
+            Notification::send($notifiableUsers, new PushNotification($title, $body));
 
+            return redirect()->back()->with('success', "Notifikasi berhasil dikirim ke {$notifiableUsers->count()} perangkat pada target: {$message}.");
+            
         } catch (\Exception $e) {
-             return redirect()->back()
-                ->withInput()
-                ->with('error', 'Gagal mengirim notifikasi: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal mengirim notifikasi: ' . $e->getMessage());
         }
     }
 }
