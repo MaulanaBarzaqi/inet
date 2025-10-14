@@ -3,8 +3,6 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use NotificationChannels\Fcm\FcmChannel;
 use NotificationChannels\Fcm\FcmMessage;
@@ -16,14 +14,16 @@ class PushNotification extends Notification
 
     protected string $title;
     protected string $body;
+    protected array $dataPayLoad;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(string $title, string $body)
+    public function __construct(string $title, string $body, array $dataPayLoad = [])
     {
         $this->title = $title;
         $this->body = $body;
+        $this->dataPayLoad = $dataPayLoad;
     }
 
     /**
@@ -41,23 +41,19 @@ class PushNotification extends Notification
      */
     public function toFcm(object $notifiable): FcmMessage
     {
-    //    return new FcmMessage(
-    //     notification:  new FcmNotification(
-    //         title: $this->title,
-    //         body: $this->body
-    //         )
-    //     );
+        $defaultData = [
+            'type' => 'general_message',
+            'user_id' => (string)($notifiable->id ?? 'n/a') 
+        ];
+        $mergedData = array_merge($defaultData, $this->dataPayLoad);
+
         return (new FcmMessage(
             notification: new FcmNotification(
             title: $this->title,
             body: $this->body
         )
         ))
-         ->data([
-         'type' => 'general_message',
-          'user_id' => (string)($notifiable->id ?? 'n/a') 
-        //  'user_id' => $notifiable->id ?? 'n/a'
-         ])
+         ->data($mergedData)
          ->custom([
              'android' => [
                  'notification' => [
