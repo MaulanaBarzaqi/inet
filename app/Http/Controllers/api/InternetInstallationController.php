@@ -10,15 +10,6 @@ use Illuminate\Support\Facades\DB;
 
 class InternetInstallationController extends Controller
 {
-    function readAll()
-    {
-        $internetInstallation = InternetInstallation::with(['internetPackage','user'])->get();
-
-        return response()->json([
-            'data' => $internetInstallation,
-        ], 200);
-    }
-
     public function create(StoreInternetInstallationRequest $request)
     {  
          $existingInstallation = InternetInstallation::where('user_id', $request->user()->id)->first();

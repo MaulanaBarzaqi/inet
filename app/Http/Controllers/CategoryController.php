@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Helpers\CategoryHelper;
 use App\Http\Requests\Category\StoreCategoryRequest;
@@ -68,14 +67,6 @@ class CategoryController extends Controller
                 ->with('error', 'Gagal menambahkan kategori: ' . $e->getMessage())
                 ->withInput();
         }
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
     }
 
     /**

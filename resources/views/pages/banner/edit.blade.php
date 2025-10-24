@@ -17,7 +17,7 @@
                 id="title" 
                 name="title"
                 value="{{ old('title') ? old('title') : $item->title }}"
-                placeholder="nama judul banner" 
+                placeholder="judul banner" 
                 class="form-control @error('title') is-invalid @enderror" />
             @error('title') <div class="form-text">{{ $message }}</div>@enderror
           </div>

@@ -7,34 +7,13 @@ use App\Models\Banner;
 
 class BannerController extends Controller
 {
-    function readAll()
-    {
-        $banner = Banner::all();
-
-        return response()->json([
-            'data' => $banner,
-        ], 200);
-    }
-    
      function readAllBanners()
     {
-        $banner = Banner::orderBy('created_at', 'asc')
-            ->limit(5)
-            ->get();
+        $banner = Banner::orderBy('created_at', 'desc')->get();
 
-        //      if (count($banner) > 0) {
-        //         return response()->json([
-        //             'data' => $banner,
-        //         ], 200);
-        //     }else {
-        //         return response()->json([
-        //             'message' => 'not found',
-        //             'data' => $banner,
-        //         ], 404);
-        // }
             return response()->json([
-                    'data' => $banner, // Ini akan [] jika kosong
-                    'message' => count($banner) > 0 ? 'Data found' : 'No banners'
+                    'message' => count($banner) > 0 ? 'Data found' : 'No banners',
+                    'data' => $banner,
                 ], 200);
     }
 }

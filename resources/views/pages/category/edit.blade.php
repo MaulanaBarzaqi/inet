@@ -24,13 +24,7 @@
           {{-- deskripsi --}}
            <div class="mb-3">
                 <label class="form-label" for="description">isi deskripsi</label>
-                <textarea 
-                    id="description" 
-                    name="description"
-                    rows="4"
-                    placeholder="isi deskripsi"
-                    class="form-control @error('description') is-invalid @enderror">{{ old('description', $item->description) }}
-                </textarea>
+                <textarea id="description" name="description" rows="4" placeholder="isi deskripsi" class="form-control @error('description') is-invalid @enderror">{{ old('description', $item->description) }}</textarea>
                     @error('description') <div class="form-text">{{ $message }}</div>@enderror
             </div>
           <button type="submit" class="btn btn-primary">Ubah Category</button>

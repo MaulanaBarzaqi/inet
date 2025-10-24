@@ -14,6 +14,7 @@ class InternetPackageController extends Controller
     {
         $this->middleware('auth');
     }
+    
     /**
      * Display a listing of the resource.
      */
@@ -36,7 +37,7 @@ class InternetPackageController extends Controller
                 ->paginate(5);
         }
 
-        return view('pages.paket-internet.index')->with([
+        return view('pages.internet-package.index')->with([
             'items' => $items
         ]);
     }
@@ -48,7 +49,7 @@ class InternetPackageController extends Controller
     {   
         $categories = Category::orderBy('name')->get();
 
-        return view('pages.paket-internet.create')->with([
+        return view('pages.internet-package.create')->with([
             'categories' => $categories
         ]);
     }
@@ -84,21 +85,13 @@ class InternetPackageController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(InternetPackage $internetPackage)
     {
         $categories = Category::orderBy('name')->get();
 
-        return view('pages.paket-internet.edit')->with([
+        return view('pages.internet-package.edit')->with([
             'item' => $internetPackage,
             'categories' => $categories
         ]);

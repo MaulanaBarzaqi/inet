@@ -7,6 +7,7 @@ use App\Http\Controllers\InternetInstallationController;
 use App\Http\Controllers\InternetPackageController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RegionController;
+use App\Http\Controllers\TermsAndConditionsController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -71,8 +72,13 @@ Route::controller(UserController::class)->group(function(){
     Route::put('user/{user:uuid}/set-region', 'setRegion')->name('user.region');
 });
 
-Route::get('notifications/create', [NotificationController::class, 'create'])->name('notifications.create');
-Route::post('notifications/send', [NotificationController::class, 'send'])->name('notifications.send');
+Route::controller(NotificationController::class)->group(function() {
+    Route::get('notifications/create', 'create')->name('notifications.create');
+    Route::post('notifications/send', 'send')->name('notifications.send');
+});
+
+Route::get('terms-and-conditions', [TermsAndConditionsController::class, 'index'])->name('terms.and.conditions');
+
 
 Route::get('logout', function () {
     Auth::logout();

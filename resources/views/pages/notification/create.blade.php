@@ -1,6 +1,6 @@
 @extends('layouts.default')
 
-@section('title', 'Notification - Kirim Notifikasi')
+@section('title', 'Notifikasi - Kirim Notifikasi')
 
 @section('content')
     <div class="col-md-12">
@@ -43,16 +43,8 @@
 
                 {{-- body --}}
                 <div class="mb-3">
-                    <label class="form-label" for="body">isi notifikasi</label>
-                    <textarea 
-                        id="body" 
-                        name="body"
-                        rows="4"
-                        placeholder="isi notifikasi"
-                        class="form-control @error('body') is-invalid @enderror" 
-                        required>
-                        {{ old('body') }}
-                    </textarea>
+                    <label class="form-label" for="body">detail notifikasi</label>
+                    <textarea id="body" name="body" rows="4" placeholder="detail notifikasi" class="form-control @error('body') is-invalid @enderror" required>{{ old('body') }}</textarea>
                     @error('body') <div class="form-text text-danger">{{ $message }}</div>@enderror
                 </div>
                 

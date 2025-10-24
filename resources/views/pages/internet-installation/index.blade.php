@@ -58,7 +58,7 @@
               <a href="{{ route('internet-installation.show', $item->uuid) }}" class="btn btn-success btn-sm">
                 <i class='bx bx-show'></i>
               </a>
-              <form action="" 
+              <form action="{{ route('internet-installation.destroy', $item->uuid)  }}" 
                   method="post" 
                   class="d-inline">
                 @csrf

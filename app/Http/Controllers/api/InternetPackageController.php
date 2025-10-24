@@ -7,30 +7,15 @@ use App\Models\InternetPackage;
 
 class InternetPackageController extends Controller
 {
-    function readAll()
-    {
-        $internetPackage = InternetPackage::with('category')->get();
-
-        return response()->json([
-            'data' => $internetPackage,
-        ], 200);
-    }
-
     function readAllInternetPackages()
     {
         $internetPackage = InternetPackage::with('category')
                             ->orderBy('monthly_bill', 'asc')
                             ->get();
-        if (count($internetPackage) > 0) {
-            return response()->json([
-                'data' => $internetPackage,
-            ], 200);
-        } else {
-            return response()->json([
-                'message' => 'not found',
-                'data' => $internetPackage
-            ], 404);
-        }
+          return response()->json([
+                    'message' => count($internetPackage) > 0 ? 'Data found' : 'No internet packages',
+                    'data' => $internetPackage,
+                ], 200);
     }
 
     function readByCategory($categorySlug)
@@ -60,19 +45,10 @@ class InternetPackageController extends Controller
                            ->where('name', 'like', "%{$name}%")
                            ->orderBy('name')
                            ->get();
-        // if (count($internetPackage) > 0) {
-        //     return response()->json([
-        //         'data' => $internetPackage,
-        //     ], 200);
-        // } else {
-        //     return response()->json([
-        //         'message' => 'not found ' . $name,
-        //         'data' => $internetPackage
-        //     ], 404);
-        // }
+
         return response()->json([
-                    'data' => $internetPackage, // Ini akan [] jika kosong
-                    'message' => count($internetPackage) > 0 ? 'Data found' : 'No result on' . $name
+                    'message' => count($internetPackage) > 0 ? 'Data found' : 'No result on' . $name,
+                    'data' => $internetPackage,
                 ], 200);
     }
     

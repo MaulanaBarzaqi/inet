@@ -58,15 +58,6 @@
               <a href="{{ route('user.show', $item->uuid) }}" class="btn btn-success btn-sm">
                 <i class='bx bx-show'></i>
               </a>
-              <form action="" 
-                  method="post" 
-                  class="d-inline">
-                @csrf
-                @method('delete')
-                <button class="btn btn-danger btn-sm">
-                  <i class="bx bx-trash"></i>
-                </button>
-              </form>
             </td>
           </tr>
           @empty

@@ -10,27 +10,25 @@
           @csrf
           {{-- nama --}}
           <div class="mb-3">
-            <label class="form-label" for="name">nama</label>
+            <label class="form-label" for="name">nama Kategori</label>
             <input 
                 type="text" 
                 id="name" 
                 name="name"
                 value="{{ old('name') }}"
-                placeholder="nama category" 
+                placeholder="nama kategori" 
                 class="form-control @error('name') is-invalid @enderror" />
             @error('name') <div class="form-text">{{ $message }}</div>@enderror
           </div>
           {{-- deskripsi --}}
            <div class="mb-3">
                 <label class="form-label" for="description">isi deskripsi</label>
-                <textarea 
-                    id="description" 
-                    name="description"
-                    rows="4"
-                    placeholder="isi deskripsi"
-                    class="form-control @error('description') is-invalid @enderror">{{ old('description') }}
-                </textarea>
-                    @error('description') <div class="form-text">{{ $message }}</div>@enderror
+                <textarea id="description" name="description" rows="4" placeholder="isi deskripsi" class="form-control @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
+                    @error('description') 
+                      <div class="form-text">
+                        {{ $message }}
+                      </div>
+                    @enderror
             </div>
           <button type="submit" class="btn btn-primary">Tambah Category</button>
         </form>

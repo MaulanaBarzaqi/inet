@@ -16,7 +16,7 @@
                 id="title" 
                 name="title"
                 value="{{ old('title') }}"
-                placeholder="nama paket internet" 
+                placeholder="judul banner" 
                 class="form-control @error('title') is-invalid @enderror" />
             @error('title') <div class="form-text">{{ $message }}</div>@enderror
           </div>

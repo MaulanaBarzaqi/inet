@@ -11,15 +11,6 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    function readAll()
-    {
-        $user = User::all();
-
-        return response()->json([
-            'data' => $user,
-        ], 200);
-    }
-
     function register(Request $request)
     {
         $this->validate($request, [
