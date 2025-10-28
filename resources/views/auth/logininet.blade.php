@@ -64,7 +64,7 @@
             <div class="card-body">
               <!-- Logo -->
               <div class="app-brand justify-content-center">
-                <a href="index.html" class="app-brand-link gap-2">
+                
                   <span class="app-brand-logo demo">
                   <img 
                     src="{{ asset('assets/img/logo/inet_logo.png') }}" 
@@ -75,7 +75,7 @@
                   />
                   </span>
                   <span class="app-brand-text demo text-body fw-bolder">Inet</span>
-                </a>
+                
               </div>
               <!-- /Logo -->
               <h4 class="mb-2">Welcome Admin Inet</h4>
@@ -146,13 +146,13 @@
                   <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
                 </div>
               </form>
-{{-- 
+
               <p class="text-center">
                 <span>New on our platform?</span>
                 <a href="{{ route('register') }}">
                   <span>Create an account</span>
                 </a>
-              </p> --}}
+              </p>
             </div>
           </div>
           <!-- /Register -->
