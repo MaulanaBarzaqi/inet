@@ -106,11 +106,6 @@
               <div data-i18n="Perfect Scrollbar">Daftar</div>
             </a>
           </li>
-          {{-- <li class="menu-item {{ \Route::is('internet-installation.create') ? 'active' : '' }}">
-            <a href="{{ route('internet-installation.create') }}" class="menu-link">
-              <div data-i18n="Text Divider">Tambah Pemasangan</div>
-            </a>
-          </li> --}}
         </ul>
       </li>
       
@@ -123,7 +118,7 @@
       </li>
 
       <!-- notifications -->
-      <li class="menu-item {{ \Route::is('notification.*') ? 'active' : '' }}">
+      <li class="menu-item {{ \Route::is('notifications.*') ? 'active' : '' }}">
         <a href="{{ route('notifications.create') }}" class="menu-link">
           <i class="menu-icon tf-icons bx bx-bell-plus"></i>
           <div data-i18n="Basic">Notification</div>
