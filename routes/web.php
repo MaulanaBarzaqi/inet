@@ -74,6 +74,9 @@ Route::controller(UserController::class)->group(function(){
 Route::controller(NotificationController::class)->group(function() {
     Route::get('notifications/create', 'create')->name('notifications.create');
     Route::post('notifications/send', 'send')->name('notifications.send');
+    Route::get('notifications/report', 'report')->name('notifications.report');
+    Route::delete('notifications/{id}', 'destroy')->name('notifications.destroy');
+    Route::get('/notifications/report/pdf', 'exportPdf')->name('notifications.report.pdf');
 });
 
 Route::get('terms-and-conditions', [TermsAndConditionsController::class, 'index'])->name('terms.and.conditions');

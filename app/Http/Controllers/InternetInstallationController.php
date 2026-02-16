@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\InternetInstallation;
+use App\Models\NotificationLog;
 use App\Notifications\PushNotification;
 use Illuminate\Http\Request;
 
@@ -99,6 +100,24 @@ class InternetInstallationController extends Controller
                     'new_status' => $newStatus,
                 ];
                 $user->notify(new PushNotification($title, $body, $dataPayload));
+                
+                // Simpan log notifikasi
+                NotificationLog::create([
+                        'target_type'  => 'user',
+                        'target_id'    => $user->id,
+                        'category'     => 'installation_update',
+                        'title'        => $title,
+                        'body'         => $body,
+                        'total_sent'   => 1,
+                        'sent_by'      => auth()->id(),
+                        'data_payload' =>[
+                            'target_name'     => $user->name,
+                            'installation_id' => $item->id,
+                            'old_status'      => $oldStatus,
+                            'new_status'      => $newStatus,
+                        ], 
+                ]);
+
             } else {
                 $item->save();
             }

@@ -118,11 +118,23 @@
       </li>
 
       <!-- notifications -->
-      <li class="menu-item {{ \Route::is('notifications.*') ? 'active' : '' }}">
-        <a href="{{ route('notifications.create') }}" class="menu-link">
-          <i class="menu-icon tf-icons bx bx-bell-plus"></i>
-          <div data-i18n="Basic">Notification</div>
+      <li class="menu-item {{ \Route::is('notifications.*') ? 'open active' : '' }}">
+        <a href="javascript:void(0)" class="menu-link menu-toggle">
+          <i class="menu-icon tf-icons bx bx-user-plus"></i>
+          <div data-i18n="Extended UI">Notification</div>
         </a>
+        <ul class="menu-sub">
+          <li class="menu-item {{ \Route::is('notifications.create') ? 'active' : '' }}">
+            <a href="{{ route('notifications.create') }}" class="menu-link">
+              <div data-i18n="Perfect Scrollbar">Sent Notification</div>
+            </a>
+          </li>
+          <li class="menu-item {{ \Route::is('notifications.report') ? 'active' : '' }}">
+            <a href="{{ route('notifications.report') }}" class="menu-link">
+              <div data-i18n="Perfect Scrollbar">Report Notification</div>
+            </a>
+          </li>
+        </ul>
       </li>
 
       <!-- Assets -->
